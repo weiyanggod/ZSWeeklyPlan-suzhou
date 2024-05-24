@@ -1,5 +1,5 @@
 <template>
-  <p-c></p-c>
+  <mobile></mobile>
 </template>
 
 <script lang="ts" setup>
