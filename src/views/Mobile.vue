@@ -2,8 +2,8 @@
   <div class="page">
     <!-- 标题 -->
     <div class="title">
-      <img class="title-img" src="@/assets/img/大标题.png" />
-      <div class="yearSelect">
+      <img class="title-img" src="@/assets/img/头部.png" />
+      <!-- <div class="yearSelect">
         <el-select v-model="year" placeholder="Select" size="default">
           <el-option
             v-for="item in yearList"
@@ -13,80 +13,92 @@
             @change="changeYear"
           />
         </el-select>
-      </div>
+      </div> -->
     </div>
-    <div class="unit-text title-font-family">单位：万元</div>
-    <!-- 头部集团列表 -->
-    <div class="headerList">
-      <div
-        v-for="(item, index) in groupList"
-        :key="index"
-        class="headerList-item"
-      >
-        <div class="headerList-item-box">
-          <div class="headerList-item-box-title">
-            <i class="icon-zuojiantou"></i>
-            <div class="headerList-item-box-title-text title-font-family">
-              {{ item.name }}
-            </div>
-          </div>
-          <div class="headerList-item-box-content">
-            <div class="headerList-item-box-content-item">
-              <el-statistic
-                :value="item.numberList[0]"
-                :value-style="headerNumberStyle"
-              >
-                <template #title>
-                  <div class="headerList-item-box-content-item-title">
-                    预算总额
-                  </div>
-                </template>
-                <template #suffix>
-                  <i
-                    class="headerList-item-box-content-item-title"
-                    style="font-style: normal"
-                  >
-                    万元
-                  </i>
-                </template>
-              </el-statistic>
-            </div>
-            <div class="headerList-item-box-content-item">
-              <div class="headerList-item-box-content-item-title executed-text">
-                已执行
-              </div>
-              <div
-                class="headerList-item-box-content-item-number executed-number"
-              >
-                {{ item.numberList[1] + '%' }}
+
+    <!-- 内容区块 -->
+    <div class="content">
+      <!-- 头部集团列表 -->
+      <div class="headerList">
+        <div
+          v-for="(item, index) in groupList"
+          :key="index"
+          class="headerList-item"
+        >
+          <div class="headerList-item-box">
+            <div class="headerList-item-box-title">
+              <div class="headerList-item-box-title-text title-font-family">
+                {{ item.name }}
               </div>
             </div>
-            <div class="headerList-item-box-content-item">
-              <el-statistic
-                :value="item.numberList[2]"
-                :value-style="headerNumberStyle"
-              >
-                <template #title>
-                  <div class="headerList-item-box-content-item-title">执行</div>
-                </template>
-              </el-statistic>
-            </div>
-            <div class="headerList-item-box-content-item">
-              <el-statistic
-                :value="item.numberList[3]"
-                :value-style="headerNumberStyle"
-              >
-                <template #title>
-                  <div class="headerList-item-box-content-item-title">超额</div>
-                </template>
-              </el-statistic>
+            <div class="headerList-item-box-content">
+              <div class="headerList-item-box-content-item">
+                <el-statistic :value="item.numberList[0]">
+                  <template #title>
+                    <div class="headerList-item-box-content-item-title">
+                      预算总额
+                    </div>
+                  </template>
+                  <template #suffix>
+                    <i
+                      class="headerList-item-box-content-item-title"
+                      style="font-style: normal"
+                    >
+                      万元
+                    </i>
+                  </template>
+                </el-statistic>
+              </div>
+              <div class="headerList-item-box-content-item">
+                <el-statistic
+                  :value="item.numberList[1]"
+                  value-style="color: #FF6000;"
+                >
+                  <template #title>
+                    <div class="headerList-item-box-content-item-title">
+                      已执行
+                    </div>
+                  </template>
+                </el-statistic>
+              </div>
+              <div class="headerList-item-box-content-item" style="width: 28%">
+                <el-statistic :value="item.numberList[2]">
+                  <template #title>
+                    <div class="headerList-item-box-content-item-title">
+                      执行
+                    </div>
+                  </template>
+                  <template #suffix>
+                    <i
+                      class="headerList-item-box-content-item-title"
+                      style="font-style: normal"
+                    >
+                      万元
+                    </i>
+                  </template>
+                </el-statistic>
+              </div>
+              <div class="headerList-item-box-content-item" style="width: 22%">
+                <el-statistic :value="item.numberList[3]">
+                  <template #title>
+                    <div class="headerList-item-box-content-item-title">
+                      超额
+                    </div>
+                  </template>
+                  <template #suffix>
+                    <i
+                      class="headerList-item-box-content-item-title"
+                      style="font-style: normal"
+                    >
+                      万元
+                    </i>
+                  </template>
+                </el-statistic>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- 内容区块 -->
-    <div class="content">
       <!-- 左侧风险预警 -->
       <div class="riskWarning">
         <div class="riskWarning-box">
@@ -101,7 +113,7 @@
               :class="{
                 'riskWarning-active': riskWarningActiveText === '年度',
               }"
-              @click="riskWarningActiveText = '年度'"
+              @click="changeRiskWarnQuarter('年度')"
             >
               年度
             </div>
@@ -111,7 +123,7 @@
               :class="{
                 'riskWarning-active': riskWarningActiveText === '季度',
               }"
-              @click="riskWarningActiveText = '季度'"
+              @click="changeRiskWarnQuarter('季度')"
             >
               季度
             </div>
@@ -126,13 +138,13 @@
                 {{ item.name }}
               </div>
               <div class="riskWarning-box-content-item-number">
-                <el-statistic
-                  :value="TransitionRiskWarningNumberList[index]"
-                  :value-style="headerNumberStyle"
-                />
-                <span class="riskWarning-box-content-item-number-text">
-                  项超额
-                </span>
+                <el-statistic :value="TransitionRiskWarningNumberList[index]">
+                  <template #suffix>
+                    <div class="riskWarning-box-content-item-number-text">
+                      项超额
+                    </div>
+                  </template>
+                </el-statistic>
               </div>
             </div>
           </div>
@@ -146,25 +158,28 @@
               class="quarter-box-title-img"
               src="@/assets/img/标题装饰.png"
             />
-            <div class="quarter-box-title-text">季度执行情况</div>
+            <div class="quarter-box-title-text">
+              <div>季度执行情况</div>
+            </div>
           </div>
-          <div class="quarter-box-content">
+          <div class="quarter-box-button">
             <div
               v-for="(item, index) in quarterList"
               :key="index"
-              class="quarter-box-content-item"
-              :style="formatQuarterItemStyle(index)"
+              class="item"
+              :class="{ active: newQuarter === index + 1 }"
+              style="margin-left: 10px"
+              @click="changeQuarter(index + 1)"
             >
-              <div
-                class="quarter-box-content-item-title quarter-box-content-title"
-              >
-                {{ item.name }}
-              </div>
-              <chart
-                :chart-style="{ flex: 1 }"
-                :option="quarterChartsOption"
-              ></chart>
+              {{ item.name }}
             </div>
+          </div>
+          <div class="quarter-box-content">
+            <chart
+              ref="quarterChartsOptionRef"
+              :chart-style="{ flex: 1 }"
+              :option="quarterChartsOption"
+            ></chart>
           </div>
         </div>
       </div>
@@ -182,6 +197,7 @@
             </div>
             <div class="income-box-content">
               <chart
+                ref="incomeChartRef"
                 :chart-style="{ flex: 1 }"
                 :option="incomeChartsOption"
               ></chart>
@@ -200,6 +216,7 @@
             </div>
             <div class="subject-box-content">
               <chart
+                ref="subjectChartsOptionRef"
                 :chart-style="{ flex: 1 }"
                 :option="subjectChartsOption"
               ></chart>
@@ -212,6 +229,15 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  getOverallApi,
+  getYearRiskApi,
+  getQuarterRiskApi,
+  getExecutionApi,
+  getIncomeApi,
+  getDeductionPointsApi,
+} from '@/api/index/index'
+import { useStore } from '@/stores/store'
 import Chart from '@/components/Chart/Chart.vue'
 import { ref, reactive } from 'vue'
 import { useTransition } from '@vueuse/core'
@@ -222,16 +248,29 @@ const nowSize = (val) => {
 
   return val * (nowClientWidth / 1920)
 }
-// 头部数字样式
-const headerNumberStyle = {
-  fontFamily: 'D-DIN-Bold',
-  fontWeight: 'bold',
-  fontSize: '24px',
-  letterSpacing: '1px',
+
+// 数字转换
+const toNumber = (number, divisor, multiplier) => {
+  if (typeof Number(number) !== 'number') {
+    return 0
+  }
+  if (divisor) {
+    number = Number(number) / divisor
+  }
+  if (multiplier) {
+    number = Number(number) * multiplier
+  }
+  if (multiplier && divisor) {
+    number = (Number(number) * multiplier) / divisor
+  }
+  number = Number(Number(number).toFixed(2))
+  return number
 }
 
 // 年度
 const year = ref('2024')
+const store = useStore()
+store.year = year
 
 // 年度筛选列表
 const yearList = [
@@ -247,7 +286,8 @@ const yearList = [
 
 // 年度改变
 const changeYear = (val) => {
-  console.log(val)
+  year.value = val
+  render()
 }
 
 // 年度季度选择
@@ -268,12 +308,6 @@ const TransitionWCNumberList = useTransition(WCNumberList)
 
 const LHNumberList = ref([0, 0, 0, 0])
 const TransitionLHNumberList = useTransition(LHNumberList)
-
-MLNumberList.value = [4235, 88.8, 4235, 4235]
-SHNumberList.value = [4235, 88.8, 4235, 4235]
-JTNumberList.value = [4235, 88.8, 4235, 4235]
-WCNumberList.value = [4235, 88.8, 4235, 4235]
-LHNumberList.value = [4235, 88.8, 4235, 4235]
 
 // 集团列表数据
 let groupList = ref([
@@ -298,54 +332,177 @@ let groupList = ref([
     numberList: TransitionLHNumberList,
   },
 ])
+// 获取集团列表数据
+const getOverall = () => {
+  // 获取集团列表数据
+  getOverallApi().then(({ data, code }) => {
+    if (code === 200) {
+      MLNumberList.value = []
+      WCNumberList.value = []
+      SHNumberList.value = []
+      JTNumberList.value = []
+      LHNumberList.value = []
+      data.forEach((i) => {
+        if (i.zt === '梅里集团') {
+          MLNumberList.value.push(
+            toNumber(i.ysze),
+            toNumber(i.yzx, null, 100),
+            toNumber(i.zxys),
+            toNumber(i.ce) > 0 ? toNumber(i.ce) : 0,
+          )
+        }
+        if (i.zt === '盛洪集团') {
+          SHNumberList.value.push(
+            toNumber(i.ysze),
+            toNumber(i.yzx, null, 100),
+            toNumber(i.zxys),
+            toNumber(i.ce) > 0 ? toNumber(i.ce) : 0,
+          )
+        }
+        if (i.zt === '嘉塍集团') {
+          JTNumberList.value.push(
+            toNumber(i.ysze),
+            toNumber(i.yzx, null, 100),
+            toNumber(i.zxys),
+            toNumber(i.ce) > 0 ? toNumber(i.ce) : 0,
+          )
+        }
+        if (i.zt === '闻川集团') {
+          WCNumberList.value.push(
+            toNumber(i.ysze),
+            toNumber(i.yzx, null, 100),
+            toNumber(i.zxys),
+            toNumber(i.ce) > 0 ? toNumber(i.ce) : 0,
+          )
+        }
+        if (i.zt === '麟湖集团') {
+          LHNumberList.value.push(
+            toNumber(i.ysze),
+            toNumber(i.yzx, null, 100),
+            toNumber(i.zxys),
+            toNumber(i.ce) > 0 ? toNumber(i.ce) : 0,
+          )
+        }
+      })
+    }
+  })
+}
 
 // 风险数字列表
 const riskWarningNumberList = ref([0, 0, 0, 0, 0])
 const TransitionRiskWarningNumberList = useTransition(riskWarningNumberList)
-riskWarningNumberList.value = [100235, 100235, 100235, 100235, 100235]
 
 // 风险数据
 const riskWarningList = ref([
   {
     name: '梅里集团',
-    number: 100235,
+    number: riskWarningNumberList.value[0],
   },
   {
-    name: '梅里集团',
-    number: 100235,
+    name: '盛洪集团',
+    number: riskWarningNumberList.value[1],
   },
   {
-    name: '梅里集团',
-    number: 100235,
+    name: '嘉塍集团',
+    number: riskWarningNumberList.value[2],
   },
   {
-    name: '梅里集团',
-    number: 100235,
+    name: '闻川集团',
+    number: riskWarningNumberList.value[3],
   },
   {
-    name: '梅里集团',
-    number: 100235,
+    name: '麟湖集团',
+    number: riskWarningNumberList.value[4],
   },
 ])
 
-// 季度名称列表
-const quarterList = ref([
-  {
-    name: '一季度',
-  },
-  {
-    name: '二季度',
-  },
-  {
-    name: '三季度',
-  },
-  {
-    name: '四季度',
-  },
-])
+// 获取风险预警数据
+const getRisk = async (name) => {
+  let dataVal = null
+  let codeVal = null
+  if (name === '年度') {
+    const { data, code } = await getYearRiskApi()
+    dataVal = data
+    codeVal = code
+  } else if (name === '季度') {
+    const today = new Date()
+    const quarter = Math.floor(today.getMonth() / 3) + 1
 
-// 季度数据
-const quarterData = reactive([])
+    const { data, code } = await getQuarterRiskApi({ quarter })
+    dataVal = data
+    codeVal = code
+  }
+
+  if (codeVal === 200) {
+    riskWarningNumberList.value[0] = 0
+    riskWarningNumberList.value[1] = 0
+    riskWarningNumberList.value[2] = 0
+    riskWarningNumberList.value[3] = 0
+    riskWarningNumberList.value[4] = 0
+    dataVal.forEach((i) => {
+      if (i.zt === '梅里集团') {
+        for (const k in i) {
+          if (k !== 'ysnd' && k !== 'zt') {
+            if (toNumber(i[k]) < 0) {
+              riskWarningNumberList.value[0] += 1
+            }
+          }
+        }
+      }
+      if (i.zt === '盛洪集团') {
+        for (const k in i) {
+          if (k !== 'ysnd' && k !== 'zt') {
+            if (toNumber(i[k]) < 0) {
+              riskWarningNumberList.value[1] += 1
+            }
+          }
+        }
+      }
+      if (i.zt === '嘉塍集团') {
+        for (const k in i) {
+          if (k !== 'ysnd' && k !== 'zt') {
+            if (toNumber(i[k]) < 0) {
+              riskWarningNumberList.value[2] += 1
+            }
+          }
+        }
+      }
+      if (i.zt === '闻川集团') {
+        for (const k in i) {
+          if (k !== 'ysnd' && k !== 'zt') {
+            if (toNumber(i[k]) < 0) {
+              riskWarningNumberList.value[3] += 1
+            }
+          }
+        }
+      }
+      if (i.zt === '麟湖集团') {
+        for (const k in i) {
+          if (k !== 'ysnd' && k !== 'zt') {
+            if (toNumber(i[k]) < 0) {
+              riskWarningNumberList.value[4] += 1
+            }
+          }
+        }
+      }
+    })
+  }
+}
+
+// 风险预警年度季度更改
+const changeRiskWarnQuarter = (name) => {
+  riskWarningActiveText.value = name
+  getRisk(name)
+}
+
+// 当前选择季度
+const newQuarter = ref(1)
+const quarterChartsOptionRef = ref()
+// 季度执行情况季度更改
+const changeQuarter = (index) => {
+  newQuarter.value = index
+  getExecution(index)
+}
 
 // 季度图表配置
 const quarterChartsOption = {
@@ -356,6 +513,22 @@ const quarterChartsOption = {
       crossStyle: {
         color: '#999',
       },
+    },
+    formatter: (params) => {
+      let relVal = params[0].name + '</br>'
+      let unit = '万元'
+
+      for (var i = 0, l = params.length; i < l; i++) {
+        i === 2 ? (unit = '%') : (unit = '万元')
+        relVal +=
+          params[i].marker +
+          params[i].seriesName +
+          ' : ' +
+          params[i].value +
+          unit +
+          '<br/>'
+      }
+      return relVal
     },
   },
   legend: {
@@ -389,7 +562,11 @@ const quarterChartsOption = {
     {
       type: 'value',
       name: '万元',
-      max: 5000,
+      nameTextStyle: {
+        color: 'rgba(141, 141, 141, 1)',
+        align: 'right',
+        padding: [0, 8, 0, 0],
+      },
       splitLine: {
         show: false,
       },
@@ -403,9 +580,6 @@ const quarterChartsOption = {
         },
       },
       axisLabel: {
-        color: 'rgba(141, 141, 141, 1)',
-      },
-      nameTextStyle: {
         color: 'rgba(141, 141, 141, 1)',
       },
     },
@@ -426,14 +600,16 @@ const quarterChartsOption = {
       },
       nameTextStyle: {
         color: 'rgba(141, 141, 141, 1)',
+        align: 'left',
+        padding: [0, 0, 0, 8],
       },
     },
   ],
   grid: {
-    top: 50,
-    left: 50,
-    right: 50,
-    bottom: 30,
+    top: 60,
+    left: 60,
+    right: 30,
+    bottom: 20,
   },
   series: [
     {
@@ -464,7 +640,7 @@ const quarterChartsOption = {
           global: false, // 缺省为 false
         },
       },
-      data: [3000, 2000, 3000, 3000, 3000],
+      data: [],
     },
     {
       name: '预算执行',
@@ -494,7 +670,7 @@ const quarterChartsOption = {
           global: false, // 缺省为 false
         },
       },
-      data: [4000, 3000, 4000, 4000, 4000],
+      data: [],
     },
     {
       name: '执行率',
@@ -503,7 +679,7 @@ const quarterChartsOption = {
       symbolSize: 10,
       tooltip: {
         valueFormatter: function (value) {
-          return value + ' °C'
+          return value + ''
         },
       },
       lineStyle: {
@@ -512,55 +688,75 @@ const quarterChartsOption = {
       itemStyle: {
         color: 'rgba(255, 96, 0, 1)',
       },
-      data: [90, 60, 78, 80, 100],
+      data: [],
     },
   ],
 }
 
-// 收入情况数据
-const incomeData = reactive([
-  { value: 1048, name: '梅里集团' },
-  { value: 735, name: '盛洪集团' },
-  { value: 580, name: '嘉塍集团' },
-  { value: 484, name: '闻川集团' },
-  { value: 300, name: '麟湖集团' },
+// 季度名称列表
+const quarterList = ref([
+  {
+    name: '一季度',
+    chartOption: null,
+  },
+  {
+    name: '二季度',
+    chartOption: null,
+  },
+  {
+    name: '三季度',
+    chartOption: null,
+  },
+  {
+    name: '四季度',
+    chartOption: null,
+  },
 ])
+
+// 获取季度执行情况数据
+const getExecution = (index) => {
+  getExecutionApi().then(({ data, code }) => {
+    if (code === 200) {
+      quarterChartsOption.series[0].data = []
+      quarterChartsOption.series[1].data = []
+      quarterChartsOption.series[2].data = []
+      const arr = data.filter((i) => i.quarter === String(index))
+
+      arr.forEach((i) => {
+        quarterChartsOption.series[0].data.push(toNumber(i.jdysze))
+        quarterChartsOption.series[1].data.push(toNumber(i.jdzxys))
+        quarterChartsOption.series[2].data.push(toNumber(Number(i.zxl) * 100))
+      })
+
+      quarterChartsOptionRef.value.render(quarterChartsOption)
+    }
+  })
+}
+
+const incomeChartRef = ref()
+// 收入情况数据
+const incomeData = ref([])
 
 // 收入情况图表配置
 const incomeChartsOption = {
   backgroundColor: '#fff',
   tooltip: {
     trigger: 'item',
+    formatter: (params) => {
+      return (
+        params.marker + params.name + ' : ' + params.value + '万元' + '<br/>'
+      )
+    },
+  },
+  grid: {
+    left: 0,
   },
   legend: {
     orient: 'vertical',
     right: '8%',
     top: 'middle',
-    itemGap: nowSize(10),
+    itemGap: 10,
     bottom: 'middle',
-    formatter(name) {
-      incomeTotal = 0
-      const val = incomeData.find((i) => {
-        return i.name === name
-      })
-      incomeData.forEach((i) => {
-        incomeTotal += i.value
-      })
-
-      const index = groupList.value.findIndex((i) => i.name === name)
-
-      const number = ((val.value / incomeTotal) * 100).toFixed(0)
-      return (
-        '{name|' +
-        val.name +
-        '}' +
-        '  ' +
-        `{number${index}|` +
-        number +
-        '%' +
-        '}'
-      )
-    },
     textStyle: {
       height: 15,
       verticalAlign: 'middle',
@@ -602,9 +798,9 @@ const incomeChartsOption = {
     },
     // 数据圆
     {
-      name: 'Access From',
+      name: '收入',
       type: 'pie',
-      radius: ['55%', '80%'],
+      radius: ['65%', '80%'],
       avoidLabelOverlap: false,
       label: {
         normal: {
@@ -615,7 +811,7 @@ const incomeChartsOption = {
               '{income|总收入}' +
               '\n\r' +
               '{number|' +
-              incomeTotal.toLocaleString() +
+              toNumber(incomeTotal) +
               '}' +
               '\n\r' +
               '{unit|万元}'
@@ -628,7 +824,7 @@ const incomeChartsOption = {
               fontWeight: 400,
             },
             number: {
-              fontSize: 24,
+              fontSize: 15,
               fontWeight: 'bold',
               fontFamily: 'D-DIN-Bold',
               color: '#3D3D3D',
@@ -645,6 +841,7 @@ const incomeChartsOption = {
           },
         },
       },
+
       labelLine: {
         normal: {
           show: false,
@@ -654,7 +851,7 @@ const incomeChartsOption = {
         borderWidth: 5, //设置border的宽度有多大
         borderColor: '#fff',
       },
-      data: incomeData,
+      data: incomeData.value,
       right: '40%',
     },
     // 内部圆
@@ -699,10 +896,72 @@ groupList.value.forEach((i, index) => {
 // 收入情况总数
 let incomeTotal = reactive(0)
 
+// 获取收入情况数据并配置
+const getIncome = () => {
+  getIncomeApi().then(({ data, code }) => {
+    if (code === 200) {
+      const arr = data.sort((star, next) => {
+        const sortList = [
+          '梅里集团',
+          '盛洪集团',
+          '嘉塍集团',
+          '闻川集团',
+          '麟湖集团',
+        ]
+        return sortList.indexOf(star.name) - sortList.indexOf(next.name)
+      })
+      arr.forEach((i) => {
+        delete i.year
+
+        i.value = toNumber(Number(i.value))
+      })
+      incomeData.value = arr
+      incomeChartsOption.series[1].data = arr
+      incomeChartsOption.legend.formatter = (name) => {
+        if (incomeData.value.length > 0) {
+          incomeTotal = 0
+          const val = incomeData.value.find((i) => {
+            return i.name === name
+          })
+          incomeData.value.forEach((i) => {
+            incomeTotal += i.value
+          })
+          const index = groupList.value.findIndex((i) => i.name === name)
+          const number = ((val.value / incomeTotal) * 100).toFixed(0)
+          return (
+            '{name|' +
+            val.name +
+            '}' +
+            '  ' +
+            `{number${index}|` +
+            number +
+            '%' +
+            '}'
+          )
+        }
+      }
+      incomeChartRef.value.render(incomeChartsOption)
+    }
+  })
+}
+
 // 主体扣分情况图表配置
 const subjectChartsOption = {
   tooltip: {
     trigger: 'axis',
+    formatter: (params) => {
+      let relVal = params[0].name + '</br>'
+      for (var i = 0, l = params.length; i < l; i++) {
+        relVal +=
+          params[i].marker +
+          params[i].seriesName +
+          ' : ' +
+          params[i].value +
+          '分' +
+          '<br/>'
+      }
+      return relVal
+    },
   },
   legend: {
     top: '5%',
@@ -758,7 +1017,7 @@ const subjectChartsOption = {
       type: 'line',
       symbol: 'none',
       stack: 'Total',
-      data: [120, 132, 101, 134, 90],
+      data: [],
       itemStyle: {
         color: 'rgba(149, 152, 155, 1)',
       },
@@ -768,7 +1027,7 @@ const subjectChartsOption = {
       type: 'line',
       symbol: 'none',
       stack: 'Total',
-      data: [220, 182, 191, 234, 290],
+      data: [],
       itemStyle: {
         color: 'rgba(226, 150, 103, 1)',
       },
@@ -778,7 +1037,7 @@ const subjectChartsOption = {
       type: 'line',
       symbol: 'none',
       stack: 'Total',
-      data: [150, 232, 201, 154, 190],
+      data: [],
       itemStyle: {
         color: 'rgba(77, 96, 141, 1)',
       },
@@ -788,7 +1047,7 @@ const subjectChartsOption = {
       type: 'line',
       symbol: 'none',
       stack: 'Total',
-      data: [320, 332, 301, 334, 390],
+      data: [],
       itemStyle: {
         color: 'rgba(185, 151, 103, 1)',
       },
@@ -797,31 +1056,45 @@ const subjectChartsOption = {
 }
 
 // 主体扣分情况数据
-const subjectData = reactive([])
+const subjectChartsOptionRef = ref('')
 
-// 格式化季度外边距
-const formatQuarterItemStyle = (index) => {
-  if (index === 0) {
-    return {
-      margin: '2.5px 2.5px 2.5px 0',
+// 主体数据获取
+const getDeductionPoints = () => {
+  getDeductionPointsApi().then(({ data, code }) => {
+    if (code === 200) {
+      subjectChartsOption.series[0].data = []
+      subjectChartsOption.series[1].data = []
+      subjectChartsOption.series[2].data = []
+      subjectChartsOption.series[3].data = []
+      const arr = data.filter((i) => i.quarter === '1')
+      const arr2 = data.filter((i) => i.quarter === '2')
+      const arr3 = data.filter((i) => i.quarter === '3')
+      const arr4 = data.filter((i) => i.quarter === '4')
+      arr.forEach((i) => {
+        subjectChartsOption.series[0].data.push(toNumber(i.point))
+      })
+      arr2.forEach((i) => {
+        subjectChartsOption.series[1].data.push(toNumber(i.point))
+      })
+      arr3.forEach((i) => {
+        subjectChartsOption.series[2].data.push(toNumber(i.point))
+      })
+      arr4.forEach((i) => {
+        subjectChartsOption.series[3].data.push(toNumber(i.point))
+      })
+      subjectChartsOptionRef.value.render(subjectChartsOption)
     }
-  }
-  if (index === 1) {
-    return {
-      margin: '2.5px 0 2.5px 2.5px',
-    }
-  }
-  if (index === 2) {
-    return {
-      margin: '0 2.5px 0 0',
-    }
-  }
-  if (index === 3) {
-    return {
-      margin: '0 0 0 2.5px',
-    }
-  }
+  })
 }
+
+const render = () => {
+  getOverall()
+  getRisk('年度')
+  getExecution(1)
+  getIncome()
+  getDeductionPoints()
+}
+render()
 </script>
 
 <style lang="less" scoped>
@@ -829,23 +1102,16 @@ const formatQuarterItemStyle = (index) => {
   font-size: 25px !important;
 }
 .page {
+  position: relative;
   display: flex;
   flex-flow: column;
-  min-height: 100vh;
-  max-height: 100vh;
-  // padding: 24px 47px 17.5px 48px;
+
   .title {
     width: 100%;
-    height: 93px;
-    display: flex;
-    align-items: center;
-    justify-content: end;
+    height: 1024px;
     &-img {
-      width: 85%;
+      width: 100%;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     .yearSelect {
       width: 135px;
@@ -854,13 +1120,14 @@ const formatQuarterItemStyle = (index) => {
       margin-top: 30px;
     }
   }
-  .unit-text {
-    font-size: 16px;
-    color: #ff6000;
-    text-align: right !important;
-    margin: 0 0 5px 0;
-    font-style: italic;
-    font-weight: 400;
+  .content {
+    box-sizing: border-box;
+    position: absolute;
+    top: 640px;
+    width: 100%;
+    background: linear-gradient(0deg, #fff7e8 0%, #fffcf6 100%);
+    border-radius: 102px 102px 0px 0px;
+    padding: 0 51px 0 51px;
   }
   .headerList {
     width: 100%;
@@ -871,25 +1138,34 @@ const formatQuarterItemStyle = (index) => {
     margin-bottom: 15px;
     &-item {
       width: 100%;
-      background: rgba(244, 244, 244, 0.6);
-      padding: 10px;
+      padding-left: 50px;
+      box-sizing: border-box;
       border-radius: 10px;
+      margin-top: 100px;
       &-box {
         width: 100%;
         height: 100%;
-        background-color: #fff;
         border-radius: 10px;
         padding: 5px 0 5px 15px;
-        box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.05);
+        padding-left: 50px;
         &-title {
+          position: relative;
           display: flex;
           align-items: center;
           &-text {
             font-weight: 400;
-            font-size: 24px;
+            font-size: 77px;
             color: #3d3d3d;
             font-style: italic;
-            margin-left: 15px;
+          }
+          &-text::after {
+            content: '';
+            width: 23px;
+            height: 77px;
+            position: absolute;
+            top: 5px;
+            left: -50px;
+            background: rgba(255, 96, 0, 1);
           }
         }
         &-content {
@@ -897,12 +1173,16 @@ const formatQuarterItemStyle = (index) => {
           display: flex;
           flex-wrap: wrap;
           align-items: end;
+          margin-top: 80px;
           &-item {
-            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 25%;
             &-title {
               font-family: Alibaba PuHuiTi;
               font-weight: 400;
-              font-size: 14px;
+              font-size: 51px;
               color: #8d8d8d;
             }
             &-number {
@@ -913,112 +1193,109 @@ const formatQuarterItemStyle = (index) => {
               vertical-align: bottom;
             }
             .executed-text {
-              font-size: 12px;
+              font-size: 41px;
+              color: #8d8d8d;
             }
             .executed-number {
               font-weight: bold;
-              font-size: 16px;
+              font-weight: bold;
+              font-size: 77px;
               color: #ff6000;
-              margin-bottom: 3px;
             }
           }
         }
       }
     }
   }
-  .content {
-    // display: flex;
-    justify-content: space-between;
-    flex: 1;
-  }
   .riskWarning,
   .quarter,
   .income,
   .subject {
     width: 100%;
-    background: rgba(244, 244, 244, 0.6);
-    border-radius: 10px;
-    padding: 10px;
     display: flex;
     flex-direction: column;
+    margin-top: 80px;
+    background-color: #fff;
+    border-radius: 51px;
     &-box {
       display: flex;
       flex-direction: column;
       flex: 1;
+      padding: 50px;
       &-title {
         width: 100%;
         display: flex;
         align-items: center;
         padding: 10px 21px 10px 24px;
         border-radius: 10px 10px 0 0;
-        margin-bottom: 5px;
-        background-color: #fff;
-        box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.05);
+        border: 0;
         &-img {
-          width: 29px;
-          height: 13px;
+          width: 82px;
+          height: 41px;
           margin-right: 10px;
         }
         &-text {
           font-family: 迷你简汉真广标;
           font-weight: 400;
-          font-size: 24px;
+          font-size: 77px;
           color: #3d3d3d;
           font-style: italic;
         }
         &-button {
           cursor: pointer;
-          width: 70px;
-          height: 25px;
+          width: 269px;
+          height: 96px;
           background-color: #cfcfcf;
           font-family: 迷你简汉真广标;
-          text-align: center;
-          font-size: 16px;
           font-weight: 400;
-          margin: 0 0 0 55px;
+          font-size: 61px;
+          color: #3d3d3d;
+          text-align: center;
           align-items: center;
-          line-height: 25px;
+          line-height: 96px;
+          margin-left: auto;
         }
       }
       &-content {
+        display: flex;
         flex-wrap: wrap;
         flex: 1;
-        padding: 18px 73px 0 58px;
-        background-color: #fff;
-        box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.05);
+        padding: 18px 73px 0 100px;
         &-item {
+          width: 50%;
           display: flex;
           flex-direction: column;
+          margin-top: 100px;
           height: 20%;
           &-title {
             position: relative;
             font-family: 迷你简汉真广标;
             font-weight: 400;
-            font-size: 16px;
+            font-size: 51px;
             color: #3d3d3d;
             font-style: italic;
           }
           &-title::after {
             content: '';
-            width: 6px;
-            height: 20px;
+            width: 15px;
+            height: 51px;
             position: absolute;
-            top: -3px;
-            left: -20px;
+            top: 5px;
+            left: -40px;
             background: rgba(255, 96, 0, 1);
           }
           &-number {
             flex: 1;
-            width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-left: 19px;
+            padding-left: 100px;
             &-text {
               font-family: Alibaba PuHuiTi;
               font-weight: 400;
-              font-size: 14px;
+              font-size: 41px;
               color: #8d8d8d;
+              margin-left: 20px;
             }
           }
         }
@@ -1031,53 +1308,71 @@ const formatQuarterItemStyle = (index) => {
   }
   .quarter {
     width: 100%;
+    height: 1500px;
+    border-radius: 51px;
+
     &-box {
-      background-color: #fff;
+      &-button {
+        display: flex;
+        padding-left: 10%;
+        .item {
+          margin-top: 80px;
+          cursor: pointer;
+          width: 14.01042vw;
+          height: 5vw;
+          background-color: #cfcfcf;
+          font-family: 迷你简汉真广标;
+          font-weight: 400;
+          font-size: 3.17708vw;
+          color: #3d3d3d;
+          text-align: center;
+          align-items: center;
+          line-height: 5vw;
+        }
+      }
     }
     &-box-content {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
-      background-color: #f8f8f8;
       padding: 0;
-      &-item {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 25vh;
-        background-color: #fff;
-        margin: 5px;
-        &-title {
-          margin: 10px 0 10px 40px;
-        }
-        &-title::after {
-          left: -20;
-        }
-      }
+      margin-top: 100px;
+      padding-bottom: 50px;
     }
   }
   .rightContent {
-    width: 457px;
+    width: 100%;
+    padding-bottom: 100px;
     .income,
     .subject {
       width: 100%;
-      height: 45%;
+      height: 1034px;
       &-box {
-        background-color: #f8f8f8;
         &-content {
           padding: 0;
-          background-color: #fff;
           display: flex;
         }
       }
     }
     .subject {
-      margin-top: 16px;
-      height: 52%;
+      margin-top: 100px;
+      height: 1178px;
     }
   }
 }
-
+.active {
+  background: #ffdfcc !important;
+  color: #ff6000 !important;
+}
+:deep(.el-statistic__content) {
+  margin-top: 20px;
+}
+:deep(.el-statistic__number) {
+  font-family: D-DIN;
+  font-weight: bold;
+  font-size: 77px;
+  color: #3d3d3d;
+}
 :deep(.el-statistic__head) {
   margin-bottom: 0;
 }

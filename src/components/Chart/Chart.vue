@@ -43,7 +43,6 @@ watch(
 )
 const render = (option) => {
   const data = option || props.option || null
-
   const mychart = echarts.init(chart.value)
   mychart.setOption(data)
 }
