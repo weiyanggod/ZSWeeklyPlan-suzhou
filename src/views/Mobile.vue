@@ -64,6 +64,14 @@
                       已执行
                     </div>
                   </template>
+                  <template #suffix>
+                    <i
+                      class="headerList-item-box-content-item-title"
+                      style="color: #ff6000"
+                    >
+                      %
+                    </i>
+                  </template>
                 </el-statistic>
               </div>
               <div class="headerList-item-box-content-item" style="width: 28%">
@@ -179,7 +187,7 @@
               {{ item.name }}
             </div>
           </div>
-          <div class="quarter-box-content">
+          <div v-loading="quarterLoading" class="quarter-box-content">
             <chart
               ref="quarterChartsOptionRef"
               :chart-style="{ flex: 1 }"
@@ -235,6 +243,7 @@
 
 <script lang="ts" setup>
 import {
+  getYearApi,
   getOverallApi,
   getYearRiskApi,
   getQuarterRiskApi,
@@ -280,7 +289,7 @@ const store = useStore()
 store.year = year
 
 // 年度筛选列表
-const yearList = [
+const yearList = ref([
   {
     value: '2024',
     label: '2024年',
@@ -289,7 +298,15 @@ const yearList = [
     value: '2023',
     label: '2023年',
   },
-]
+])
+
+const getYear = () => {
+  getYearApi().then(({ data, code }) => {
+    if (code === 200) {
+      yearList.value = data
+    }
+  })
+}
 
 // 年度改变
 const changeYear = (val) => {
@@ -468,6 +485,7 @@ const changeRiskWarnQuarter = (name) => {
 // 当前选择季度
 const newQuarter = ref(1)
 const quarterChartsOptionRef = ref()
+const quarterLoading = ref(false)
 // 季度执行情况季度更改
 const changeQuarter = (index) => {
   newQuarter.value = index
@@ -685,20 +703,20 @@ const quarterList = ref([
 
 // 获取季度执行情况数据
 const getExecution = (index) => {
+  quarterLoading.value = true
   getExecutionApi().then(({ data, code }) => {
     if (code === 200) {
       quarterChartsOption.series[0].data = []
       quarterChartsOption.series[1].data = []
       quarterChartsOption.series[2].data = []
       const arr = data.filter((i) => i.quarter === String(index))
-
       arr.forEach((i) => {
         quarterChartsOption.series[0].data.push(toNumber(i.jdysze))
         quarterChartsOption.series[1].data.push(toNumber(i.jdzxys))
         quarterChartsOption.series[2].data.push(toNumber(Number(i.zxl) * 100))
       })
-
       quarterChartsOptionRef.value.render(quarterChartsOption)
+      quarterLoading.value = false
     }
   })
 }
@@ -1032,33 +1050,24 @@ const subjectChartsOptionRef = ref('')
 const getDeductionPoints = () => {
   getDeductionPointsApi().then(({ data, code }) => {
     if (code === 200) {
-      subjectChartsOption.series[0].data = []
-      subjectChartsOption.series[1].data = []
-      subjectChartsOption.series[2].data = []
-      subjectChartsOption.series[3].data = []
-      const arr = data.filter((i) => i.quarter === '1')
-      const arr2 = data.filter((i) => i.quarter === '2')
-      const arr3 = data.filter((i) => i.quarter === '3')
-      const arr4 = data.filter((i) => i.quarter === '4')
-      arr.forEach((i) => {
-        subjectChartsOption.series[0].data.push(toNumber(i.point))
+      subjectChartsOption.series.forEach((i) => {
+        i.data = []
       })
-      arr2.forEach((i) => {
-        subjectChartsOption.series[1].data.push(toNumber(i.point))
+      const arr = ['1', '2', '3', '4']
+      arr.forEach((i, index) => {
+        const temp = data.filter((item) => item.quarter === i)
+        temp.forEach((i) => {
+          subjectChartsOption.series[index].data.push(toNumber(i.point))
+        })
+        subjectChartsOptionRef.value.render(subjectChartsOption)
       })
-      arr3.forEach((i) => {
-        subjectChartsOption.series[2].data.push(toNumber(i.point))
-      })
-      arr4.forEach((i) => {
-        subjectChartsOption.series[3].data.push(toNumber(i.point))
-      })
-      subjectChartsOptionRef.value.render(subjectChartsOption)
     }
   })
 }
 
 const render = async () => {
   loading.value = true
+  await getYear()
   await getOverall()
   await getRisk('年度')
   await getExecution(1)
@@ -1137,7 +1146,7 @@ render()
             width: 23px;
             height: 77px;
             position: absolute;
-            top: 5px;
+            top: 20px;
             left: -50px;
             background: rgba(255, 96, 0, 1);
           }
@@ -1254,7 +1263,7 @@ render()
             width: 15px;
             height: 51px;
             position: absolute;
-            top: 5px;
+            top: 10px;
             left: -40px;
             background: rgba(255, 96, 0, 1);
           }
@@ -1362,7 +1371,7 @@ render()
 }
 :deep(.el-select__placeholder),
 :deep(.el-select__icon) {
-  text-align: center;
+  // text-align: center;
   color: #000;
   line-height: 92px;
   font-size: 92px;
