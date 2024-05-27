@@ -128,7 +128,7 @@
               季度
             </div>
           </div>
-          <div class="riskWarning-box-content">
+          <div v-loading="riskWarningLoading" class="riskWarning-box-content">
             <div
               v-for="(item, index) in riskWarningList"
               :key="index"
@@ -416,8 +416,11 @@ const riskWarningList = ref([
   },
 ])
 
+const riskWarningLoading = ref(false)
+
 // 获取风险预警数据
 const getRisk = async (name) => {
+  riskWarningLoading.value = true
   let dataVal = null
   let codeVal = null
   if (name === '年度') {
@@ -432,61 +435,21 @@ const getRisk = async (name) => {
     dataVal = data
     codeVal = code
   }
-
+  riskWarningNumberList.value = riskWarningNumberList.value.map((i) => (i = 0))
   if (codeVal === 200) {
-    riskWarningNumberList.value[0] = 0
-    riskWarningNumberList.value[1] = 0
-    riskWarningNumberList.value[2] = 0
-    riskWarningNumberList.value[3] = 0
-    riskWarningNumberList.value[4] = 0
     dataVal.forEach((i) => {
-      if (i.zt === '梅里集团') {
-        for (const k in i) {
-          if (k !== 'ysnd' && k !== 'zt') {
-            if (toNumber(i[k]) < 0) {
-              riskWarningNumberList.value[0] += 1
-            }
-          }
-        }
-      }
-      if (i.zt === '盛洪集团') {
-        for (const k in i) {
-          if (k !== 'ysnd' && k !== 'zt') {
-            if (toNumber(i[k]) < 0) {
-              riskWarningNumberList.value[1] += 1
-            }
-          }
-        }
-      }
-      if (i.zt === '嘉塍集团') {
-        for (const k in i) {
-          if (k !== 'ysnd' && k !== 'zt') {
-            if (toNumber(i[k]) < 0) {
-              riskWarningNumberList.value[2] += 1
-            }
-          }
-        }
-      }
-      if (i.zt === '闻川集团') {
-        for (const k in i) {
-          if (k !== 'ysnd' && k !== 'zt') {
-            if (toNumber(i[k]) < 0) {
-              riskWarningNumberList.value[3] += 1
-            }
-          }
-        }
-      }
-      if (i.zt === '麟湖集团') {
-        for (const k in i) {
-          if (k !== 'ysnd' && k !== 'zt') {
-            if (toNumber(i[k]) < 0) {
-              riskWarningNumberList.value[4] += 1
-            }
+      const temp = ['梅里集团', '盛洪集团', '嘉塍集团', '闻川集团', '麟湖集团']
+      const index = temp.findIndex((item) => item === i.zt)
+      for (const k in i) {
+        if (k !== 'ysnd' && k !== 'zt') {
+          if (toNumber(i[k]) < 0) {
+            riskWarningNumberList.value[index] += 1
           }
         }
       }
     })
   }
+  riskWarningLoading.value = false
 }
 
 // 风险预警年度季度更改
