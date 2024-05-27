@@ -3,21 +3,26 @@
     <!-- 标题 -->
     <div class="title">
       <img class="title-img" src="@/assets/img/头部.png" />
-      <!-- <div class="yearSelect">
-        <el-select v-model="year" placeholder="Select" size="default">
+      <div class="yearSelect">
+        <el-select
+          v-model="year"
+          :teleported="false"
+          placeholder="Select"
+          size="default"
+          @change="changeYear"
+        >
           <el-option
             v-for="item in yearList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-            @change="changeYear"
           />
         </el-select>
-      </div> -->
+      </div>
     </div>
 
     <!-- 内容区块 -->
-    <div class="content">
+    <div v-loading="loading" class="content">
       <!-- 头部集团列表 -->
       <div class="headerList">
         <div
@@ -266,6 +271,8 @@ const toNumber = (number, divisor, multiplier) => {
   number = Number(Number(number).toFixed(2))
   return number
 }
+
+const loading = ref(false)
 
 // 年度
 const year = ref('2024')
@@ -881,8 +888,8 @@ const getIncome = () => {
       incomeData.value = arr
       incomeChartsOption.series[1].data = arr
       incomeChartsOption.legend.formatter = (name) => {
+        incomeTotal = 0
         if (incomeData.value.length > 0) {
-          incomeTotal = 0
           const val = incomeData.value.find((i) => {
             return i.name === name
           })
@@ -1050,12 +1057,14 @@ const getDeductionPoints = () => {
   })
 }
 
-const render = () => {
-  getOverall()
-  getRisk('年度')
-  getExecution(1)
-  getIncome()
-  getDeductionPoints()
+const render = async () => {
+  loading.value = true
+  await getOverall()
+  await getRisk('年度')
+  await getExecution(1)
+  await getIncome()
+  await getDeductionPoints()
+  loading.value = false
 }
 render()
 </script>
@@ -1070,6 +1079,7 @@ render()
   flex-flow: column;
 
   .title {
+    position: relative;
     width: 100%;
     height: 1024px;
     &-img {
@@ -1077,8 +1087,9 @@ render()
       height: 100%;
     }
     .yearSelect {
-      width: 135px;
-      height: 35px;
+      position: absolute;
+      top: 40%;
+      left: 4%;
       border: 0;
       margin-top: 30px;
     }
@@ -1340,14 +1351,34 @@ render()
   margin-bottom: 0;
 }
 :deep(.el-select__wrapper) {
-  background: #f6e0be;
+  background: rgba(255, 96, 0, 0);
   border: 0;
   box-shadow: 0 0 0 0;
   border-radius: 0;
+  width: 515px;
+}
+:deep(.el-select__placeholder) {
+  height: 92px;
 }
 :deep(.el-select__placeholder),
 :deep(.el-select__icon) {
   text-align: center;
-  color: rgba(61, 61, 61, 1);
+  color: #000;
+  line-height: 92px;
+  font-size: 92px;
+  font-style: italic;
+  font-family: 迷你简汉真广标;
+}
+:deep(.el-popper) {
+  min-height: 400px;
+}
+:deep .el-select-dropdown__item {
+  font-size: 50px;
+  height: 100px;
+  line-height: 100px;
+}
+
+:deep .el-select-dropdown {
+  font-size: 92px;
 }
 </style>
