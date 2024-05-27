@@ -8,7 +8,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import postcsspxtoviewport8plugin from 'postcss-px-to-viewport-8-plugin'
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'JXKBMobile',
+  base: 'jxkbMobile/',
   server: {
     host: '0.0.0.0',
     proxy: {
