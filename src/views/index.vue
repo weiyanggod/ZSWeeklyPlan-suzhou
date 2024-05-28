@@ -152,7 +152,16 @@
                 {{ item.name }}
               </div>
               <div class="riskWarning-box-content-item-number">
-                <el-statistic :value="TransitionRiskWarningNumberList[index]">
+                <el-statistic
+                  :value="TransitionRiskWarningNumberList[index]"
+                  :value-style="{
+                    fontSize: '25px',
+                    color:
+                      TransitionRiskWarningNumberList[index] > 0
+                        ? '#ff6000'
+                        : '',
+                  }"
+                >
                   <template #suffix>
                     <div class="riskWarning-box-content-item-number-text">
                       项超额
@@ -513,7 +522,7 @@ const quarterChartsOption = {
           params[i].marker +
           params[i].seriesName +
           ' : ' +
-          params[i].value +
+          params[i].value.toLocaleString() +
           unit +
           '<br/>'
       }
@@ -733,7 +742,12 @@ const incomeChartsOption = {
     trigger: 'item',
     formatter: (params) => {
       return (
-        params.marker + params.name + ' : ' + params.value + '万元' + '<br/>'
+        params.marker +
+        params.name +
+        ' : ' +
+        params.value.toLocaleString() +
+        '万元' +
+        '<br/>'
       )
     },
   },
@@ -800,7 +814,7 @@ const incomeChartsOption = {
               '{income|总收入}' +
               '\n\r' +
               '{number|' +
-              toNumber(incomeTotal) +
+              toNumber(incomeTotal).toLocaleString() +
               '}' +
               '\n\r' +
               '{unit|万元}'
