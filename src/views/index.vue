@@ -270,7 +270,6 @@ import { useTransition } from '@vueuse/core'
 const nowSize = (val) => {
   //当前视口宽度
   let nowClientWidth = document.documentElement.clientWidth
-
   return val * (nowClientWidth / 1920)
 }
 // 数字转换
