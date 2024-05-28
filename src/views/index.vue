@@ -273,7 +273,6 @@ const nowSize = (val) => {
 
   return val * (nowClientWidth / 1920)
 }
-
 // 数字转换
 const toNumber = (number, divisor, multiplier) => {
   if (typeof Number(number) !== 'number') {
