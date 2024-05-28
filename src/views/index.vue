@@ -38,7 +38,7 @@
             </div>
             <div class="headerList-item-box-content">
               <div class="headerList-item-box-content-item">
-                <el-statistic :value="item.numberList[0]">
+                <el-statistic :value="item.numberList[0]" :precision="2">
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
                       预算总额
@@ -58,6 +58,7 @@
                 <el-statistic
                   :value="item.numberList[1]"
                   value-style="color: #FF6000;"
+                  :precision="2"
                 >
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
@@ -75,7 +76,7 @@
                 </el-statistic>
               </div>
               <div class="headerList-item-box-content-item" style="width: 28%">
-                <el-statistic :value="item.numberList[2]">
+                <el-statistic :value="item.numberList[2]" :precision="2">
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
                       执行
@@ -92,7 +93,7 @@
                 </el-statistic>
               </div>
               <div class="headerList-item-box-content-item" style="width: 22%">
-                <el-statistic :value="item.numberList[3]">
+                <el-statistic :value="item.numberList[3]" :precision="2">
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
                       超额
@@ -1161,7 +1162,8 @@ render()
             display: flex;
             flex-direction: column;
             justify-content: center;
-            width: 25%;
+            width: auto;
+            margin: auto;
             &-title {
               font-family: Alibaba PuHuiTi;
               font-weight: 400;
