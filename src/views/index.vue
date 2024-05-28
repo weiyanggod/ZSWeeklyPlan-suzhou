@@ -41,17 +41,17 @@
                 <el-statistic :value="item.numberList[0]" :precision="2">
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
-                      预算总额
+                      预算总额(万元)
                     </div>
                   </template>
-                  <template #suffix>
+                  <!-- <template #suffix>
                     <i
                       class="headerList-item-box-content-item-title"
                       style="font-style: normal"
                     >
                       万元
                     </i>
-                  </template>
+                  </template> -->
                 </el-statistic>
               </div>
               <div class="headerList-item-box-content-item">
@@ -62,51 +62,51 @@
                 >
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
-                      已执行
+                      已执行(%)
                     </div>
                   </template>
-                  <template #suffix>
+                  <!-- <template #suffix>
                     <i
                       class="headerList-item-box-content-item-title"
                       style="color: #ff6000"
                     >
                       %
                     </i>
-                  </template>
+                  </template> -->
                 </el-statistic>
               </div>
-              <div class="headerList-item-box-content-item" style="width: 28%">
+              <div class="headerList-item-box-content-item">
                 <el-statistic :value="item.numberList[2]" :precision="2">
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
-                      执行
+                      执行(万元)
                     </div>
                   </template>
-                  <template #suffix>
+                  <!-- <template #suffix>
                     <i
                       class="headerList-item-box-content-item-title"
                       style="font-style: normal"
                     >
                       万元
                     </i>
-                  </template>
+                  </template> -->
                 </el-statistic>
               </div>
-              <div class="headerList-item-box-content-item" style="width: 22%">
+              <div class="headerList-item-box-content-item">
                 <el-statistic :value="item.numberList[3]" :precision="2">
                   <template #title>
                     <div class="headerList-item-box-content-item-title">
-                      超额
+                      超额(万元)
                     </div>
                   </template>
-                  <template #suffix>
+                  <!-- <template #suffix>
                     <i
                       class="headerList-item-box-content-item-title"
                       style="font-style: normal"
                     >
                       万元
                     </i>
-                  </template>
+                  </template> -->
                 </el-statistic>
               </div>
             </div>
@@ -265,6 +265,7 @@ import { useStore } from '@/stores/store'
 import Chart from '@/components/Chart/Chart.vue'
 import { ref, reactive } from 'vue'
 import { useTransition } from '@vueuse/core'
+
 // 换算方法
 const nowSize = (val) => {
   //当前视口宽度
@@ -1139,7 +1140,7 @@ render()
       padding-left: 50px;
       box-sizing: border-box;
       border-radius: 10px;
-      margin-top: 100px;
+      margin-top: 50px;
       &-box {
         width: 100%;
         height: 100%;
@@ -1176,8 +1177,7 @@ render()
             display: flex;
             flex-direction: column;
             justify-content: center;
-            width: auto;
-            margin: auto;
+            width: 25%;
             &-title {
               font-family: Alibaba PuHuiTi;
               font-weight: 400;
@@ -1369,7 +1369,7 @@ render()
 :deep(.el-statistic__number) {
   font-family: D-DIN;
   font-weight: bold;
-  font-size: 77px;
+  font-size: 60px;
   color: #3d3d3d;
 }
 :deep(.el-statistic__head) {
@@ -1380,18 +1380,18 @@ render()
   border: 0;
   box-shadow: 0 0 0 0;
   border-radius: 0;
-  width: 515px;
+  width: 400px;
 }
 :deep(.el-select__placeholder) {
   height: 92px;
+  text-align: right;
+  padding-right: 50px;
 }
 :deep(.el-select__placeholder),
 :deep(.el-select__icon) {
-  // text-align: center;
   color: #000;
   line-height: 92px;
   font-size: 92px;
-  font-style: italic;
   font-family: 迷你简汉真广标;
 }
 :deep(.el-popper) {
