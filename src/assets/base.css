@@ -1,38 +1,11 @@
-@font-face {
-  font-family: 'iconfont'; /* Project id 4553750 */
-  /* Color fonts */
-  src:
-    url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAHwAAwAAAAAA+QAAAGhAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIhgjEgZgADwKgSCBFQE2AiQDDAsKAAQgBYF8ByAb/ALIHoVxTGwPt5djfbTgwV9D34e7IrEkUECsWAGhrZCtXmZZbcLPLbkECEDvPcdZZ/N/s+cRf6DAAsp8LituWy/MxgQMLM3CtY5uk9zz25vWZNdoJjtKJJmKdHQKCMAZ8CSQGFQACMH6D5auWBZaI/Yx0PJS9gPV1kb0k1EGCSVceaqmtqaKD0KPVyvWCtQKKycnkMivIFQVBgV4UtzjSRMLTKKKdBuWBWZYf3x+MIGQFmyhGQ9yuzrAX0kPLxZn+k+9xarPmcOW19SJ5/GxfdNxrzgV7W+0nnk1n3ideK54dh57n6b35ERWwGPpZ1mlcWVmVBhGeJJvywgxUr3xJU+E61uz8X1tc268LkMbGdI19PS60k2YvtV2sbHV4VL4z1ZpAP5OHkXY8m/rv4pXOYCJdOAv6tTwm28q/kIS/GiA38KJqhDrjA63TGpQCG2HwBVFkzgTDkCRLRhoQjUBA3+zZyahdhmihwnG6c/3zdJAHwPMMUoX06RJlipugRpqtb6KgvmqJIocIYXCW+hjmhmGiqEHUi39owIAK9/pAQAAAA==')
-      format('woff2'),
-    url('iconfont.woff?t=1716183716273') format('woff'),
-    url('iconfont.ttf?t=1716183716273') format('truetype');
-}
 /*公共字体的样式 */
 @font-face {
-  font-family: D-DIN-Bold;
-  src: url('@/assets/font/D-DIN-Bold.otf');
-}
-@font-face {
-  font-family: Alibaba PuHuiTi;
-  src: url('@/assets/font/AlibabaPuHuiTi-2-65-Medium.otf');
-}
-@font-face {
-  font-family: 迷你简汉真广标;
-  src: url('@/assets/font/迷你简汉真广标.TTF');
-}
-[class^='icon-'],
-[class*='icon-'] {
-  font-family: 'iconfont' !important;
-  font-size: 16px;
+  font-family: 'AlibabaPuHuiTi';
+  src: url('./font/AlibabaPuHuiTi-2-55-Regular.otf');
+  font-weight: normal;
   font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-zuojiantou:before {
-  content: '\e82a';
-  font-size: 25px;
-}
 *,
 *::before,
 *::after {
@@ -45,10 +18,4 @@ body {
 }
 div {
   font-family: Alibaba PuHuiTi;
-}
-.number-font-family {
-  font-family: D-DIN-Bold !important;
-}
-.title-font-family {
-  font-family: 迷你简汉真广标 !important;
 }
