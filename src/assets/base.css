@@ -5,7 +5,12 @@
   font-weight: normal;
   font-style: normal;
 }
-
+@font-face {
+  font-family: 'PingFang SC-Bold';
+  src: url('./font/苹方黑体-中粗-简.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
 *,
 *::before,
 *::after {
@@ -15,7 +20,4 @@
 
 body {
   min-height: 100vh;
-}
-div {
-  font-family: Alibaba PuHuiTi;
 }

@@ -1,4 +1,3 @@
-import { useStore } from '@/stores/store'
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
@@ -14,7 +13,6 @@ interface ResultData<T = any> extends Result {
   data?: T
 }
 const URL: string = import.meta.env.VITE_API_BASE_URL
-console.log(URL)
 
 enum RequestEnums {
   TIMEOUT = 10000,
@@ -25,7 +23,7 @@ enum RequestEnums {
 
 const config = {
   // 默认地址
-  baseURL: (URL as string) || '/captial',
+  baseURL: (URL as string) || '/plan',
   // 设置超时时间
   timeout: RequestEnums.TIMEOUT as number,
   // 跨域时候允许携带凭证
@@ -104,7 +102,7 @@ class RequestHttp {
   // 常用方法封装
   get<T>(url: string, params?: object): Promise<ResultData<T>> {
     return this.service.get(url, {
-      params: { ...params, year: useStore().year },
+      params: { ...params },
     })
   }
   post<T>(url: string, params?: object): Promise<ResultData<T>> {
