@@ -5,12 +5,12 @@ export const getPlanDataApi = (params) => {
   return request.get('/getPlanData', params)
 }
 // 更新周计划
-export const updatePlanApi = () => {
-  return request.post('/updatePlan')
+export const updatePlanApi = (params) => {
+  return request.post('/updatePlan', params)
 }
 // 删除周计划
-export const deletePlanApi = () => {
-  return request.post('/deletePlan')
+export const deletePlanApi = (id) => {
+  return request.post(`/deletePlan?id=${id}`)
 }
 
 // 获取类型
@@ -18,7 +18,12 @@ export const getTypeApi = () => {
   return request.post('/getType')
 }
 
-// 保存
-export const saveApi = () => {
-  return request.post('/PlanDataDto')
+// 获取年列表
+export const getYearApi = () => {
+  return request.post('/getYear')
+}
+
+// 获取周数列表
+export const getWeekApi = () => {
+  return request.post('/getWeek')
 }

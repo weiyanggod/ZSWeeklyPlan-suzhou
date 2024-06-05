@@ -1,4 +1,3 @@
-import { useStore } from '@/stores/store'
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
@@ -104,7 +103,7 @@ class RequestHttp {
   // 常用方法封装
   get<T>(url: string, params?: object): Promise<ResultData<T>> {
     return this.service.get(url, {
-      params: { ...params, year: useStore().year },
+      params: { ...params },
     })
   }
   post<T>(url: string, params?: object): Promise<ResultData<T>> {

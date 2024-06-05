@@ -1,27 +1,28 @@
 <template>
   <div class="page">
     <div class="title">
-      <el-dropdown :teleported="false" trigger="click">
+      <el-dropdown :teleported="false" trigger="click" @command="changeYear">
         <span class="el-dropdown-link">
-          <span class="title">2024</span>
+          <span class="title">{{ year }}年</span>
         </span>
         <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item>2023</el-dropdown-item>
-            <el-dropdown-item>2022</el-dropdown-item>
-            <el-dropdown-item>2021</el-dropdown-item>
+          <el-dropdown-menu v-for="(item, index) in years" :key="index">
+            <el-dropdown-item :command="item">{{ item }}年</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-dropdown :teleported="false">
+      <el-dropdown
+        :teleported="false"
+        max-height="200px"
+        trigger="click"
+        @command="changeWeek"
+      >
         <span class="el-dropdown-link">
-          <span class="title">第五周</span>
+          <span class="title">第{{ week }}周</span>
         </span>
         <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item>第四周</el-dropdown-item>
-            <el-dropdown-item>第三周</el-dropdown-item>
-            <el-dropdown-item>第二周</el-dropdown-item>
+          <el-dropdown-menu v-for="(item, index) in weeks" :key="index">
+            <el-dropdown-item :command="item">第{{ item }}周</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -31,510 +32,267 @@
       <tr>
         <th style="width: 250px; height: 70px">日期</th>
         <th style="width: 160px; height: 70px">星期</th>
-        <th colspan="3">工作安排</th>
-        <th>参会人员</th>
-        <th>操作</th>
+        <th colspan="3" style="width: 720px">工作安排</th>
+        <th style="width: 250px">参会人员</th>
+        <th style="width: 160px">操作</th>
       </tr>
-      <tr v-for="(item, index) in data" :key="index">
-        <td v-if="index === 0" :rowspan="data.length" style="color: #3d3d3d">
-          2024/5/27
-        </td>
-        <td>{{ item.date }}</td>
-        <td class="w150h70">{{ item.time }}</td>
-        <td
-          class="w150h70"
-          style="padding: 0 10px"
-          @dblclick="item.selectShow = true"
-        >
-          <el-select
-            v-if="item.selectShow"
-            v-model="item.mode"
-            placeholder="请输入"
+      <template v-for="it in [data, data2, data3, data4, data5]">
+        <tr v-for="(item, index) in it" :key="index">
+          <td v-if="index === 0" :rowspan="data.length" style="color: #3d3d3d">
+            {{ dayjs(item.date).format('YYYY-MM-DD') }}
+          </td>
+          <td>{{ item.week }}</td>
+          <td class="w150h70">{{ item.time }}</td>
+          <td
+            class="w150h70"
+            style="padding: 0 10px"
+            @dblclick="item.selectShow = true"
           >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+            <el-select
+              v-if="item.selectShow"
+              v-model="item.type"
+              placeholder="请输入"
+              @change="submitForm(item)"
+            >
+              <el-option
+                v-for="ite in options"
+                :key="ite.value"
+                :label="ite.label"
+                :value="ite.value"
+              />
+            </el-select>
+            <div v-else>{{ item.type }}</div>
+          </td>
+          <td
+            style="width: 420px"
+            class="input"
+            @dblclick="item.valueShow = true"
+          >
+            <el-input
+              v-if="item.valueShow"
+              v-model="item.content"
+              placeholder="请输入"
+              type="textarea"
+              @change="submitForm(item)"
             />
-          </el-select>
-          <div v-else>{{ item.mode }}</div>
-        </td>
-        <td
-          style="width: 420px"
-          class="input"
-          @dblclick="item.valueShow = true"
-        >
-          <el-input
-            v-if="item.valueShow"
-            v-model="item.value"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.value }}</div>
-        </td>
-        <td class="input" @dblclick="item.personShow = true">
-          <el-input
-            v-if="item.personShow"
-            v-model="item.person"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.person }}</div>
-        </td>
-        <td class="buttons">
-          <el-button @click="addRow(data, item, index)">新增</el-button>
-          <el-button v-if="item.del" type="danger" @click="delRow(data, index)">
-            删除
-          </el-button>
-        </td>
-      </tr>
-      <tr v-for="(item, index) in data2" :key="index">
-        <td v-if="index === 0" :rowspan="data2.length" style="color: #3d3d3d">
-          2024/5/27
-        </td>
-        <td>{{ item.date }}</td>
-        <td class="w150h70">{{ item.time }}</td>
-        <td
-          class="w150h70"
-          style="padding: 0 10px"
-          @dblclick="item.selectShow = true"
-        >
-          <el-select
-            v-if="item.selectShow"
-            v-model="item.mode"
-            placeholder="请输入"
-            @change="item.selectShow = !item.selectShow"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+            <div v-else>{{ item.content }}</div>
+          </td>
+          <td class="input" @dblclick="item.personShow = true">
+            <el-input
+              v-if="item.personShow"
+              v-model="item.member"
+              placeholder="请输入"
+              type="textarea"
+              @change="submitForm(item)"
             />
-          </el-select>
-          <div v-else>{{ item.mode }}</div>
-        </td>
-        <td
-          style="width: 420px"
-          class="input"
-          @dblclick="item.valueShow = true"
-        >
-          <el-input
-            v-if="item.valueShow"
-            v-model="item.value"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.value }}</div>
-        </td>
-        <td class="input" @dblclick="item.personShow = true">
-          <el-input
-            v-if="item.personShow"
-            v-model="item.person"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.person }}</div>
-        </td>
-        <td class="buttons">
-          <el-button @click="addRow(data2, item, index)">新增</el-button>
-          <el-button
-            v-if="item.del"
-            type="danger"
-            @click="delRow(data2, index)"
-          >
-            删除
-          </el-button>
-        </td>
-      </tr>
-      <tr v-for="(item, index) in data3" :key="index">
-        <td v-if="index === 0" :rowspan="data3.length" style="color: #3d3d3d">
-          2024/5/27
-        </td>
-        <td>{{ item.date }}</td>
-        <td class="w150h70">{{ item.time }}</td>
-        <td
-          class="w150h70"
-          style="padding: 0 10px"
-          @dblclick="item.selectShow = true"
-        >
-          <el-select
-            v-if="item.selectShow"
-            v-model="item.mode"
-            placeholder="请输入"
-            @change="item.selectShow = !item.selectShow"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <div v-else>{{ item.mode }}</div>
-        </td>
-        <td
-          style="width: 420px"
-          class="input"
-          @dblclick="item.valueShow = true"
-        >
-          <el-input
-            v-if="item.valueShow"
-            v-model="item.value"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.value }}</div>
-        </td>
-        <td class="input" @dblclick="item.personShow = true">
-          <el-input
-            v-if="item.personShow"
-            v-model="item.person"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.person }}</div>
-        </td>
-        <td class="buttons">
-          <el-button @click="addRow(data3, item, index)">新增</el-button>
-          <el-button
-            v-if="item.del"
-            type="danger"
-            @click="delRow(data3, index)"
-          >
-            删除
-          </el-button>
-        </td>
-      </tr>
-      <tr v-for="(item, index) in data4" :key="index">
-        <td v-if="index === 0" :rowspan="data4.length" style="color: #3d3d3d">
-          2024/5/27
-        </td>
-        <td>{{ item.date }}</td>
-        <td class="w150h70">{{ item.time }}</td>
-        <td
-          class="w150h70"
-          style="padding: 0 10px"
-          @dblclick="item.selectShow = true"
-        >
-          <el-select
-            v-if="item.selectShow"
-            v-model="item.mode"
-            placeholder="请输入"
-            @change="item.selectShow = !item.selectShow"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <div v-else>{{ item.mode }}</div>
-        </td>
-        <td
-          style="width: 420px"
-          class="input"
-          @dblclick="item.valueShow = true"
-        >
-          <el-input
-            v-if="item.valueShow"
-            v-model="item.value"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.value }}</div>
-        </td>
-        <td class="input" @dblclick="item.personShow = true">
-          <el-input
-            v-if="item.personShow"
-            v-model="item.person"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.person }}</div>
-        </td>
-        <td class="buttons">
-          <el-button @click="addRow(data4, item, index)">新增</el-button>
-          <el-button
-            v-if="item.del"
-            type="danger"
-            @click="delRow(data4, index)"
-          >
-            删除
-          </el-button>
-        </td>
-      </tr>
-      <tr v-for="(item, index) in data5" :key="index">
-        <td v-if="index === 0" :rowspan="data5.length" style="color: #3d3d3d">
-          2024/5/27
-        </td>
-        <td>{{ item.date }}</td>
-        <td class="w150h70">{{ item.time }}</td>
-        <td
-          class="w150h70"
-          style="padding: 0 10px"
-          @dblclick="item.selectShow = true"
-        >
-          <el-select
-            v-if="item.selectShow"
-            v-model="item.mode"
-            placeholder="请输入"
-            @change="item.selectShow = !item.selectShow"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <div v-else>{{ item.mode }}</div>
-        </td>
-        <td
-          style="width: 420px"
-          class="input"
-          @dblclick="item.valueShow = true"
-        >
-          <el-input
-            v-if="item.valueShow"
-            v-model="item.value"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.value }}</div>
-        </td>
-        <td class="input" @dblclick="item.personShow = true">
-          <el-input
-            v-if="item.personShow"
-            v-model="item.person"
-            placeholder="请输入"
-            type="textarea"
-          />
-          <div v-else>{{ item.person }}</div>
-        </td>
-        <td class="buttons">
-          <el-button @click="addRow(data5, item, index)">新增</el-button>
-          <el-button
-            v-if="item.del"
-            type="danger"
-            @click="delRow(data5, index)"
-          >
-            删除
-          </el-button>
-        </td>
-      </tr>
+            <div v-else>{{ item.member }}</div>
+          </td>
+          <td class="buttons">
+            <el-button @click="addRow(it, item, index)">新增</el-button>
+            <el-button
+              v-if="showDel(it, item)"
+              type="danger"
+              @click="delRow(item)"
+            >
+              删除
+            </el-button>
+          </td>
+        </tr>
+      </template>
     </table>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-const options = [
-  {
-    value: '来访',
-    label: '来访',
-  },
-  {
-    value: '外出',
-    label: '外出',
-  },
-]
-const data = ref([
-  {
-    time: '上午',
-    date: '星期一',
-    mode: '来访',
-    value: '测试',
-    person: '',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-  {
-    time: '下午',
-    date: '星期一',
-    mode: '来访',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-])
-const data2 = ref([
-  {
-    time: '上午',
-    date: '星期一',
-    mode: '外出',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-  {
-    time: '下午',
-    date: '星期一',
-    mode: '来访',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-])
-const data3 = ref([
-  {
-    time: '上午',
-    date: '星期一',
-    mode: '外出',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-  {
-    time: '下午',
-    date: '星期一',
-    mode: '来访',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-])
-const data4 = ref([
-  {
-    time: '上午',
-    date: '星期一',
-    mode: '外出',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-  {
-    time: '下午',
-    date: '星期一',
-    mode: '来访',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-])
-const data5 = ref([
-  {
-    time: '上午',
-    date: '星期一',
-    mode: '外出',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-  {
-    time: '下午',
-    date: '星期一',
-    mode: '来访',
-    value: '测试',
-    person: '测试',
-    selectShow: false,
-    valueShow: false,
-    personShow: false,
-    del: false,
-  },
-])
+import _ from 'lodash'
+import dayjs from 'dayjs'
+import { ElMessage } from 'element-plus'
+import {
+  getYearApi,
+  getWeekApi,
+  getTypeApi,
+  getPlanDataApi,
+  updatePlanApi,
+  deletePlanApi,
+} from '@/api/index'
+
+const years = ref([])
+const year = ref(null)
+getYearApi().then(({ data }) => {
+  years.value = data
+  year.value = years.value[0]
+})
+const weeks = ref([])
+const week = ref(null)
+getWeekApi().then(({ data }) => {
+  weeks.value = data
+  week.value = weeks.value[0]
+})
+
+// 更改周数
+const changeYear = (data) => {
+  year.value = data
+  render()
+}
+
+// 更改周数
+const changeWeek = (data) => {
+  week.value = data
+  render()
+}
+
+let options = ref([])
+const data = ref([])
+const data2 = ref([])
+const data3 = ref([])
+const data4 = ref([])
+const data5 = ref([])
 // 新增行
 const addRow = (list, item, index) => {
   list.splice(index + 1, 0, {
-    time: item.time,
     date: item.date,
-    mode: '',
-    value: '',
-    person: '',
-    selectShow: true,
-    valueShow: true,
-    personShow: true,
-    del: true,
+    year: item.year,
+    week: item.week,
+    day: item.day,
+    time: item.time,
+    type: '',
+    content: '',
+    member: '',
+    flag: '-5723903220527053290',
+    selectShow: false,
+    valueShow: false,
+    personShow: false,
   })
+  submitForm(list[index + 1])
 }
 
 // 删除行
-const delRow = (list, index) => {
-  list.splice(index, 1)
+const delRow = (item) => {
+  deletePlanApi(item.id).then(() => {
+    ElMessage({
+      message: '删除成功',
+      type: 'success',
+    })
+    render()
+  })
 }
 
-// 空白点击监听
-document.addEventListener('click', (data) => {
-  if (data.target.className === 'page') {
-    submitForm()
+// 判断当前行是否有删除按钮
+const showDel = (list, item) => {
+  // console.log(list)
+  const arr = list.filter((i) => i.time === item.time)
+  if (arr.length > 1) {
+    return true
   }
-})
+}
+
+// // 空白点击监听
+// document.addEventListener('click', (data) => {
+//   if (data.target.className === 'page') {
+//     submitForm()
+//   }
+// })
 
 // 保存
-const submitForm = () => {
+const submitForm = _.debounce((item) => {
   let isPass = true
-  const arr = [data, data2, data3, data4, data5]
-  arr.forEach((item) => {
-    item.value.forEach((i) => {
-      if (i.mode && !i.value) {
-        ElMessage({
-          message: '有工作方式时,工作安排的内容为必填',
-          type: 'warning',
-        })
-        isPass = true
-        throw new Error('LoopInterrupt')
-      } else if (i.value && !i.mode) {
-        ElMessage({
-          message: '工作安排有内容时,工作方式为必填',
-          type: 'warning',
-        })
-        isPass = true
-        throw new Error('LoopInterrupt')
-      } else {
-        isPass = true
-      }
+  if (item.type && !item.content) {
+    ElMessage({
+      message: '有工作方式时,工作安排的内容为必填',
+      type: 'warning',
     })
-  })
+    isPass = true
+    throw new Error('LoopInterrupt')
+  } else if (item.content && !item.type) {
+    ElMessage({
+      message: '工作安排有内容时,工作方式为必填',
+      type: 'warning',
+    })
+    isPass = true
+    throw new Error('LoopInterrupt')
+  } else {
+    isPass = true
+  }
+
   if (isPass) {
-    ElMessageBox.confirm('是否要保存', {
-      confirmButtonText: '保存',
-      cancelButtonText: '取消',
-    })
-      .then(() => {
-        arr.forEach((item) => {
-          item.value.forEach((i) => {
-            i.selectShow = false
-            i.valueShow = false
-            i.personShow = false
-          })
-        })
+    item.selectShow = false
+    item.valueShow = false
+    item.personShow = false
+    const data = _.cloneDeep(item)
+    data.type = options.value.find((i) => i.value === data.type)?.id
+    if (data.time === '上午') {
+      data.time = '-1768710615353833183'
+    } else if (data.time === '下午') {
+      data.time = '5796297147828552694'
+    }
+    delete data.selectShow
+    delete data.valueShow
+    delete data.personShow
+    updatePlanApi(data).then(() => {
+      if (data.id) {
         ElMessage({
           message: '保存成功',
           type: 'success',
         })
-      })
-      .catch(() => {})
+      } else {
+        ElMessage({
+          message: '新增成功',
+          type: 'success',
+        })
+      }
+      render()
+    })
   }
+}, 500)
+
+// 获取安排方式
+getTypeApi().then(({ data }) => {
+  options.value = []
+  data.forEach((item) => {
+    options.value.push({
+      value: item.showvalue,
+      label: item.showvalue,
+      id: item.id,
+    })
+  })
+})
+
+// 渲染
+const render = () => {
+  getPlanDataApi({
+    year: dayjs().year(),
+    week: week.value,
+  }).then(({ data }) => {
+    data.value = []
+    data2.value = []
+    data3.value = []
+    data4.value = []
+    data5.value = []
+    data.forEach((item) => {
+      item.selectShow = false
+      item.valueShow = false
+      item.personShow = false
+
+      if (item.week === '星期一') {
+        data.value.push(item)
+      }
+      if (item.week === '星期二') {
+        data2.value.push(item)
+      }
+      if (item.week === '星期三') {
+        data3.value.push(item)
+      }
+      if (item.week === '星期四') {
+        data4.value.push(item)
+      }
+      if (item.week === '星期五') {
+        data5.value.push(item)
+      }
+    })
+  })
 }
+render()
 </script>
 
 <style lang="less" scoped>
