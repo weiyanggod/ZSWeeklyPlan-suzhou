@@ -234,7 +234,7 @@ const submitForm = _.debounce((item) => {
     updatePlanApi(data).then(() => {
       if (data.id) {
         ElMessage({
-          message: '保存成功',
+          message: '修改成功',
           type: 'success',
         })
       } else {
