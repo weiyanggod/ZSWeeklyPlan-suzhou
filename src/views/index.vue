@@ -1,44 +1,47 @@
 <template>
   <div class="page">
     <div class="title">
-      <el-dropdown :teleported="false" trigger="click">
+      <el-dropdown :teleported="false" trigger="click" @command="changeYear">
         <span class="el-dropdown-link">
-          <span class="title">2024</span>
+          <span class="title">{{ year }}年</span>
         </span>
         <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item>2023</el-dropdown-item>
-            <el-dropdown-item>2022</el-dropdown-item>
-            <el-dropdown-item>2021</el-dropdown-item>
+          <el-dropdown-menu v-for="(item, index) in years" :key="index">
+            <el-dropdown-item :command="item">{{ item }}年</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-dropdown :teleported="false">
+      <el-dropdown :teleported="false" max-height="200px" @command="changeWeek">
         <span class="el-dropdown-link">
-          <span class="title">第{{ weeks[0] }}周</span>
+          <span class="title">第{{ week }}周</span>
         </span>
         <template #dropdown>
           <el-dropdown-menu v-for="(item, index) in weeks" :key="index">
-            <el-dropdown-item>第{{ item }}周</el-dropdown-item>
+            <el-dropdown-item :command="item">第{{ item }}周</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
       <span>项目对接计划</span>
     </div>
-    <div v-for="(item, index) in dataList" :key="index" class="car">
+    <div
+      v-for="(item, index) in dataList"
+      v-show="item.length > 0"
+      :key="index"
+      class="car"
+    >
       <div class="time">
-        <span class="date">2024/5/27</span>
-        <span class="week">{{ item[0].date }}</span>
+        <span class="date">{{ dayjs(item.date).format('YYYY/MM/DD') }}</span>
+        <span class="week">{{ item[0]?.week }}</span>
       </div>
       <div v-for="(i, inx) in item" :key="inx">
         <div class="mode">
           <span>{{ i.time }}</span>
           <div>
             <el-select
-              v-model="i.mode"
+              v-model="i.type"
               placeholder="请选择"
               style="width: 120px"
-              @change="submitForm"
+              @change="submitForm(i)"
             >
               <el-option
                 v-for="item in options"
@@ -58,21 +61,26 @@
           "
         >
           <span>对接内容</span>
-          <el-button type="danger" link @click="delRow(index, inx)">
+          <el-button
+            v-if="showDel(item, i)"
+            type="danger"
+            link
+            @click="delRow(i)"
+          >
             删除
           </el-button>
         </div>
         <el-input
-          v-model="i.value"
+          v-model="i.content"
           style="margin-top: 6px"
           :rows="2"
           type="textarea"
           :autosize="{ minRows: 5 }"
-          @change="submitForm"
+          @change="submitForm(i)"
         />
         <div style="margin-top: 10px">参会人员</div>
         <el-input
-          v-model="i.person"
+          v-model="i.member"
           style="margin-top: 6px"
           :rows="2"
           type="textarea"
@@ -126,202 +134,133 @@ getTypeApi().then(({ data }) => {
   })
 })
 
+// 更改周数
+const changeYear = (data) => {
+  year.value = data
+  render()
+}
+
+// 更改周数
+const changeWeek = (data) => {
+  week.value = data
+  render()
+}
+
 // 数据列表
-const dataList = ref([
-  [
-    {
-      time: '上午',
-      date: '星期一',
-      mode: '来访',
-      value: '测试',
-      person: '',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-    {
-      time: '下午',
-      date: '星期一',
-      mode: '来访',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-  ],
-  [
-    {
-      time: '上午',
-      date: '星期一',
-      mode: '外出',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-    {
-      time: '下午',
-      date: '星期一',
-      mode: '来访',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-  ],
-  [
-    {
-      time: '上午',
-      date: '星期一',
-      mode: '外出',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-    {
-      time: '下午',
-      date: '星期一',
-      mode: '来访',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-  ],
-  [
-    {
-      time: '上午',
-      date: '星期一',
-      mode: '外出',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-    {
-      time: '下午',
-      date: '星期一',
-      mode: '来访',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-  ],
-  [
-    {
-      time: '上午',
-      date: '星期一',
-      mode: '外出',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-    {
-      time: '下午',
-      date: '星期一',
-      mode: '来访',
-      value: '测试',
-      person: '测试',
-      selectShow: false,
-      valueShow: false,
-      personShow: false,
-      del: false,
-    },
-  ],
-])
+const dataList = ref([])
 
 // 新增行
 const addRow = (item, index, inx) => {
-  data.value[index].splice(inx + 1, 0, {
-    time: item.time,
+  dataList.value[index].splice(inx + 1, 0, {
     date: item.date,
-    mode: '',
-    value: '',
-    person: '',
-    selectShow: true,
-    valueShow: true,
-    personShow: true,
-    del: true,
+    year: item.year,
+    week: item.week,
+    day: item.day,
+    time: item.time,
+    type: '',
+    content: '',
+    member: '',
+    flag: '-5723903220527053290',
+    selectShow: false,
+    valueShow: false,
+    personShow: false,
   })
+
+  submitForm(dataList.value[index][inx + 1])
 }
 
 // 删除行
-const delRow = (index, inx) => {
-  data.value[index].splice(inx, 1)
+const delRow = (item) => {
+  deletePlanApi(item.id).then(() => {
+    ElMessage({
+      message: '删除成功',
+      type: 'success',
+    })
+    render()
+  })
+}
+
+// 判断当前行是否有删除按钮
+const showDel = (list, item) => {
+  const arr = list.filter((i) => i.time === item.time)
+  if (arr.length > 1) {
+    return true
+  }
 }
 
 // 保存
-const submitForm = _.debounce(() => {
+const submitForm = _.debounce((item) => {
   let isPass = true
-  data.value.forEach((item) => {
-    item.forEach((i) => {
-      if (i.mode && !i.value) {
-        ElMessage({
-          message: '有工作方式时,工作安排的内容为必填',
-          type: 'warning',
-        })
-        isPass = true
-        throw new Error('LoopInterrupt')
-      } else if (i.value && !i.mode) {
-        ElMessage({
-          message: '工作安排有内容时,工作方式为必填',
-          type: 'warning',
-        })
-        isPass = true
-        throw new Error('LoopInterrupt')
-      } else {
-        isPass = true
-      }
-    })
-  })
-  if (isPass) {
-    data.value.forEach((item) => {
-      item.forEach((i) => {
-        i.selectShow = false
-        i.valueShow = false
-        i.personShow = false
-      })
-    })
+  if (item.type && !item.content) {
     ElMessage({
-      message: '修改成功',
-      type: 'success',
+      message: '有工作方式时,工作安排内容为必填',
+      type: 'warning',
+    })
+    isPass = true
+    throw new Error('LoopInterrupt')
+  } else if (item.content && !item.type) {
+    ElMessage({
+      message: '工作安排有内容时,工作方式为必填',
+      type: 'warning',
+    })
+    isPass = true
+    throw new Error('LoopInterrupt')
+  } else {
+    isPass = true
+  }
+  if (isPass) {
+    item.selectShow = false
+    item.valueShow = false
+    item.personShow = false
+    const data = _.cloneDeep(item)
+    data.type = options.value.find((i) => i.value === data.type)?.id
+    if (data.time === '上午') {
+      data.time = '-1768710615353833183'
+    } else if (data.time === '下午') {
+      data.time = '5796297147828552694'
+    }
+    delete data.selectShow
+    delete data.valueShow
+    delete data.personShow
+    updatePlanApi(data).then(() => {
+      if (data.id) {
+        ElMessage({
+          message: '保存成功',
+          type: 'success',
+        })
+      } else {
+        ElMessage({
+          message: '新增成功',
+          type: 'success',
+        })
+      }
+      render()
     })
   }
-}, 1000)
+}, 500)
 
 const render = () => {
   getPlanDataApi({
     year: dayjs().year(),
     week: week.value,
   }).then(({ data }) => {
-    console.log(data)
-
     data.forEach((item) => {
       item.selectShow = false
       item.valueShow = false
       item.personShow = false
     })
-    dataList.value = data
+    dataList.value = []
+    const arr1 = data.filter((i) => i.week === '星期一')
+    const arr2 = data.filter((i) => i.week === '星期二')
+    const arr3 = data.filter((i) => i.week === '星期三')
+    const arr4 = data.filter((i) => i.week === '星期四')
+    const arr5 = data.filter((i) => i.week === '星期五')
+    dataList.value.push(arr1)
+    dataList.value.push(arr2)
+    dataList.value.push(arr3)
+    dataList.value.push(arr4)
+    dataList.value.push(arr5)
+    console.log(dataList.value)
   })
 }
 render()
@@ -390,3 +329,4 @@ render()
   align-items: center;
 }
 </style>
+, { filter }
