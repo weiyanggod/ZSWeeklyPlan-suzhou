@@ -111,13 +111,13 @@ const years = ref([])
 const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
-  year.value = years.value[0]
+  year.value = years.value[years.value.length - 1]
 })
 const weeks = ref([])
 const week = ref(null)
 getWeekApi().then(({ data }) => {
   weeks.value = data
-  week.value = weeks.value[0]
+  week.value = weeks.value[weeks.value.length - 1]
 })
 
 const options = ref([])
@@ -241,7 +241,7 @@ const submitForm = _.debounce((item) => {
 
 const render = () => {
   getPlanDataApi({
-    year: dayjs().year(),
+    year: year.value,
     week: week.value,
   }).then(({ data }) => {
     data.forEach((item) => {
