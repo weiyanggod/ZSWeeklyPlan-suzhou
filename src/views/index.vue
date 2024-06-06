@@ -30,7 +30,9 @@
       class="car"
     >
       <div class="time">
-        <span class="date">{{ dayjs(item.date).format('YYYY/MM/DD') }}</span>
+        <span class="date">
+          {{ dayjs(item[0]?.date).format('YYYY/MM/DD') }}
+        </span>
         <span class="week">{{ item[0]?.week }}</span>
       </div>
       <div v-for="(i, inx) in item" :key="inx">
@@ -225,7 +227,7 @@ const submitForm = _.debounce((item) => {
     updatePlanApi(data).then(() => {
       if (data.id) {
         ElMessage({
-          message: '保存成功',
+          message: '修改成功',
           type: 'success',
         })
       } else {
@@ -268,6 +270,7 @@ render()
 
 <style lang="less" scoped>
 .page {
+  min-height: 100vh;
   background-image: url('@/assets/img/背景图.png');
   background-size: cover;
   font-family: 'PingFang SC-Bold';
