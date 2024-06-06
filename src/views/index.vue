@@ -25,7 +25,7 @@
       </el-dropdown>
       <span>项目对接计划</span>
     </div>
-    <div v-for="(item, index) in data" :key="index" class="car">
+    <div v-for="(item, index) in dataList" :key="index" class="car">
       <div class="time">
         <span class="date">2024/5/27</span>
         <span class="week">{{ item[0].date }}</span>
@@ -90,25 +90,44 @@ import weekOfYear from 'dayjs/plugin/advancedFormat'
 dayjs.extend(weekOfYear)
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { getPlanDataApi } from '@/api/index'
+import {
+  getYearApi,
+  getWeekApi,
+  getTypeApi,
+  getPlanDataApi,
+  updatePlanApi,
+  deletePlanApi,
+} from '@/api/index'
 
+const years = ref([])
+const year = ref(null)
+getYearApi().then(({ data }) => {
+  years.value = data
+  year.value = years.value[0]
+})
 const weeks = ref([])
+const week = ref(null)
+getWeekApi().then(({ data }) => {
+  weeks.value = data
+  week.value = weeks.value[0]
+})
 
-for (let index = 0; index < dayjs(dayjs()).week(); index++) {
-  weeks.value.unshift(index)
-}
+const options = ref([])
 
-const options = [
-  {
-    value: '来访',
-    label: '来访',
-  },
-  {
-    value: '外出',
-    label: '外出',
-  },
-]
-const data = ref([
+// 获取安排方式
+getTypeApi().then(({ data }) => {
+  options.value = []
+  data.forEach((item) => {
+    options.value.push({
+      value: item.showvalue,
+      label: item.showvalue,
+      id: item.id,
+    })
+  })
+})
+
+// 数据列表
+const dataList = ref([
   [
     {
       time: '上午',
@@ -293,9 +312,16 @@ const submitForm = _.debounce(() => {
 const render = () => {
   getPlanDataApi({
     year: dayjs().year(),
-    week: dayjs(dayjs()).week(),
+    week: week.value,
   }).then(({ data }) => {
     console.log(data)
+
+    data.forEach((item) => {
+      item.selectShow = false
+      item.valueShow = false
+      item.personShow = false
+    })
+    dataList.value = data
   })
 }
 render()
