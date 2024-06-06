@@ -30,19 +30,19 @@
     </div>
     <table border="1" cellspacing="0" cellpadding="0">
       <tr>
-        <th style="width: 250px; height: 70px">日期</th>
-        <th style="width: 160px; height: 70px">星期</th>
+        <th style="width: 250px">日期</th>
+        <th style="width: 160px">星期</th>
         <th colspan="3" style="width: 720px">工作安排</th>
         <th style="width: 250px">参会人员</th>
-        <th style="width: 160px">操作</th>
+        <th style="width: 80px; height: 70px">操作</th>
       </tr>
       <template v-for="it in [data, data2, data3, data4, data5]">
         <tr v-for="(item, index) in it" :key="index">
-          <td v-if="index === 0" :rowspan="data.length" style="color: #3d3d3d">
+          <td v-if="index === 0" :rowspan="it.length" style="color: #3d3d3d">
             {{ dayjs(item.date).format('YYYY-MM-DD') }}
           </td>
           <td>{{ item.week }}</td>
-          <td class="w150h70">{{ item.time }}</td>
+          <td>{{ item.time }}</td>
           <td
             class="w150h70"
             style="padding: 0 10px"
@@ -52,6 +52,7 @@
               v-if="item.selectShow"
               v-model="item.type"
               placeholder="请输入"
+              clearable
               @change="submitForm(item)"
             >
               <el-option
@@ -263,17 +264,16 @@ const render = () => {
   getPlanDataApi({
     year: dayjs().year(),
     week: week.value,
-  }).then(({ data }) => {
+  }).then(({ data: list }) => {
     data.value = []
     data2.value = []
     data3.value = []
     data4.value = []
     data5.value = []
-    data.forEach((item) => {
+    list.forEach((item) => {
       item.selectShow = false
       item.valueShow = false
       item.personShow = false
-
       if (item.week === '星期一') {
         data.value.push(item)
       }
@@ -351,21 +351,21 @@ table tr td {
   height: 70px;
 }
 
-:deep .el-button {
+:deep(.el-button) {
   margin: 5px 10px 5px 10px;
 }
-:deep .el-input__wrapper {
+:deep(.el-input__wrapper) {
   box-shadow: 0 0 0 0;
 }
-:deep .el-form-item {
+:deep(.el-form-item) {
   margin-bottom: 0;
 }
-:deep .el-form-item__content {
+:deep(.el-form-item__content) {
   height: 18px;
   text-align: left;
   display: block;
 }
-:deep .el-select__placeholder {
+:deep(.el-select__placeholder) {
   color: rgba(53, 129, 213, 1);
 }
 .example-showcase .el-dropdown-link {
