@@ -162,7 +162,7 @@ const changeWeek = (data) => {
 const dataList = ref([[], [], [], [], [], [], []])
 
 // 新增行
-const addRow = (item, index, inx) => {
+const addRow = (item) => {
   const temp = {
     date: item.date,
     year: item.year,
