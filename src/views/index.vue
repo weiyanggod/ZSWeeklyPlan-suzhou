@@ -132,15 +132,27 @@ const years = ref([])
 const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
-  year.value = years.value[years.value.length - 1] || dayjs().year()
+  const is = years.value.find((i) => i == dayjs().year())
+  if (is) {
+    year.value = years.value[years.value.length - 1]
+  } else {
+    year.value = dayjs().year()
+  }
 })
 const weeks = ref([])
 const week = ref(null)
-getWeekApi().then(({ data }) => {
-  weeks.value = data
-  week.value = weeks.value[weeks.value.length - 1] || dayjs().week()
-})
-
+const getWeeks = () => {
+  getWeekApi().then(({ data }) => {
+    weeks.value = data
+    const is = weeks.value.find((i) => i == dayjs().year())
+    if (is) {
+      week.value = weeks.value[weeks.value.length - 1]
+    } else {
+      week.value = dayjs().week()
+    }
+  })
+}
+getWeeks()
 // 更改周数
 const changeYear = (data) => {
   year.value = data
@@ -364,12 +376,9 @@ const render = () => {
     Sunday.value = []
 
     timeList.forEach((item) => {
-      if (week.value != dayjs().week()) {
-        reset(data, item, false)
-      } else {
-        reset(data, item, true)
-      }
+      reset(data, item)
     })
+    getWeeks()
   })
 }
 
@@ -410,10 +419,24 @@ const reset = (data, item, isThisWeek) => {
   }
 
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
-  if (!isThisWeek) {
+  // if (isThisWeek && data.length === 0) {
+  //   item.list.value.push(temp)
+  // } else if (isThisWeek && data.length !== 0) {
+  //   if (arr.length === 0) {
+  //     item.list.value.push(temp)
+  //   } else {
+  //     item.list.value.push(...arr)
+  //   }
+  // } else if (!isThisWeek) {
+  //   if (arr.length === 0) {
+  //     item.list.value.push(temp)
+  //   } else {
+  //     item.list.value.push(...arr)
+  //   }
+  // }
+  if (arr.length === 0) {
     item.list.value.push(temp)
-  } else if (arr.length === 0) {
-    item.list.value.push(temp)
+    submitForm(temp)
   } else {
     item.list.value.push(...arr)
   }
