@@ -328,15 +328,34 @@ const render = () => {
         list: dataList.value[6],
       },
     ]
-    timeList.forEach((item, index) => {
-      reset(data, item, index + 1)
+    timeList.forEach((item) => {
+      reset(data, item)
     })
   })
 }
 render()
 
 // 重置数据
-const reset = (data, item, index) => {
+const reset = (data, item) => {
+  let index = 1
+  if (item.week === '星期二') {
+    index = 2
+  }
+  if (item.week === '星期三') {
+    index = 3
+  }
+  if (item.week === '星期四') {
+    index = 4
+  }
+  if (item.week === '星期五') {
+    index = 5
+  }
+  if (item.week === '星期六') {
+    index = 6
+  }
+  if (item.week === '星期日') {
+    index = 7
+  }
   const temp = {
     date: dayjs().startOf('week').add(index, 'day').format('YYYY-MM-DD'),
     year: dayjs().year(),
