@@ -134,11 +134,7 @@ const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
   const is = years.value.find((i) => i == dayjs().year())
-  if (is) {
-    year.value = years.value[years.value.length - 1]
-  } else {
-    year.value = dayjs().year()
-  }
+  year.value = dayjs().year()
 })
 const weeks = ref([])
 const week = ref(null)
@@ -146,11 +142,7 @@ const getWeeks = () => {
   getWeekApi().then(({ data }) => {
     weeks.value = data
     const is = weeks.value.find((i) => i == dayjs().year())
-    if (is) {
-      week.value = weeks.value[weeks.value.length - 1]
-    } else {
-      week.value = dayjs().week()
-    }
+    week.value = dayjs().week()
   })
 }
 getWeeks()
