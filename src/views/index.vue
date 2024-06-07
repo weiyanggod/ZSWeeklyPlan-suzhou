@@ -358,9 +358,7 @@ const reset = (data, item, index, isThisWeek) => {
     item.list.push(temp)
   } else {
     item.list = item.list.push(...arr)
-    console.log(item.list)
   }
-  console.log(dataList.value[0])
 }
 </script>
 
