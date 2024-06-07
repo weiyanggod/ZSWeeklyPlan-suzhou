@@ -187,7 +187,6 @@ const addRow = (list, item, index) => {
 
   list.forEach((i, index) => {
     i.iindex = index
-    submitForm(i, true)
   })
 }
 
@@ -213,25 +212,22 @@ const showDel = (list, item) => {
 
 // 保存
 const submitForm = (item, isNotShow) => {
-  let isPass = true
-  if (item.type && !item.content) {
+  console.log(item)
+
+  let isPass = false
+  if (!item.content) {
     ElMessage({
-      message: '有工作方式时,工作安排的内容为必填',
+      message: '工作安排的内容为必填',
       type: 'warning',
     })
-    isPass = true
-    throw new Error('LoopInterrupt')
-  } else if (item.content && !item.type) {
+  } else if (!item.type) {
     ElMessage({
-      message: '工作安排有内容时,工作方式为必填',
+      message: '来访/外出为必填',
       type: 'warning',
     })
-    isPass = true
-    throw new Error('LoopInterrupt')
   } else {
     isPass = true
   }
-
   if (isPass) {
     item.selectShow = false
     item.valueShow = false
