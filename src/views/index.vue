@@ -212,15 +212,8 @@ const showDel = (list, item) => {
   }
 }
 
-// // 空白点击监听
-// document.addEventListener('click', (data) => {
-//   if (data.target.className === 'page') {
-//     submitForm()
-//   }
-// })
-
 // 保存
-const submitForm = _.debounce((item) => {
+const submitForm = _.debounce((item, isNotShow) => {
   let isPass = true
   if (item.type && !item.content) {
     ElMessage({
@@ -256,15 +249,19 @@ const submitForm = _.debounce((item) => {
     delete data.personShow
     updatePlanApi(data).then(() => {
       if (data.id) {
-        ElMessage({
-          message: '修改成功',
-          type: 'success',
-        })
+        if (!isNotShow) {
+          ElMessage({
+            message: '修改成功',
+            type: 'success',
+          })
+        }
       } else {
-        ElMessage({
-          message: '新增成功',
-          type: 'success',
-        })
+        if (!isNotShow) {
+          ElMessage({
+            message: '新增成功',
+            type: 'success',
+          })
+        }
       }
       render()
     })
@@ -382,7 +379,7 @@ const render = () => {
 }
 
 // 重置数据
-const reset = (data, item, isThisWeek) => {
+const reset = (data, item) => {
   let index = 1
   if (item.week === '星期二') {
     index = 2
@@ -418,24 +415,9 @@ const reset = (data, item, isThisWeek) => {
   }
 
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
-  // if (isThisWeek && data.length === 0) {
-  //   item.list.value.push(temp)
-  // } else if (isThisWeek && data.length !== 0) {
-  //   if (arr.length === 0) {
-  //     item.list.value.push(temp)
-  //   } else {
-  //     item.list.value.push(...arr)
-  //   }
-  // } else if (!isThisWeek) {
-  //   if (arr.length === 0) {
-  //     item.list.value.push(temp)
-  //   } else {
-  //     item.list.value.push(...arr)
-  //   }
-  // }
   if (arr.length === 0) {
     item.list.value.push(temp)
-    submitForm(temp)
+    submitForm(temp, true)
   } else {
     item.list.value.push(...arr)
   }
