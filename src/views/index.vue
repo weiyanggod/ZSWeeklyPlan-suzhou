@@ -113,13 +113,13 @@ const years = ref([])
 const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
-  year.value = years.value[years.value.length - 1]
+  year.value = years.value[years.value.length - 1] || dayjs().year()
 })
 const weeks = ref([])
 const week = ref(null)
 getWeekApi().then(({ data }) => {
   weeks.value = data
-  week.value = weeks.value[weeks.value.length - 1]
+  week.value = weeks.value[weeks.value.length - 1] || dayjs().week()
 })
 
 const options = ref([])
@@ -149,11 +149,11 @@ const changeWeek = (data) => {
 }
 
 // 数据列表
-const dataList = ref([])
+const dataList = ref([[], [], [], [], [], [], []])
 
 // 新增行
 const addRow = (item, index, inx) => {
-  dataList.value[index].splice(inx + 1, 0, {
+  const temp = {
     date: item.date,
     year: item.year,
     week: item.week,
@@ -166,9 +166,9 @@ const addRow = (item, index, inx) => {
     selectShow: false,
     valueShow: false,
     personShow: false,
-  })
+  }
 
-  submitForm(dataList.value[index][inx + 1])
+  submitForm(temp)
 }
 
 // 删除行
@@ -251,21 +251,117 @@ const render = () => {
       item.valueShow = false
       item.personShow = false
     })
-    dataList.value = []
-    const arr1 = data.filter((i) => i.week === '星期一')
-    const arr2 = data.filter((i) => i.week === '星期二')
-    const arr3 = data.filter((i) => i.week === '星期三')
-    const arr4 = data.filter((i) => i.week === '星期四')
-    const arr5 = data.filter((i) => i.week === '星期五')
-    dataList.value.push(arr1)
-    dataList.value.push(arr2)
-    dataList.value.push(arr3)
-    dataList.value.push(arr4)
-    dataList.value.push(arr5)
-    console.log(dataList.value)
+    dataList.value = [[], [], [], [], [], [], []]
+    const timeList = [
+      {
+        week: '星期一',
+        time: '上午',
+        list: dataList.value[0],
+      },
+      {
+        week: '星期一',
+        time: '下午',
+        list: dataList.value[0],
+      },
+      {
+        week: '星期二',
+        time: '上午',
+        list: dataList.value[1],
+      },
+      {
+        week: '星期二',
+        time: '下午',
+        list: dataList.value[1],
+      },
+      {
+        week: '星期三',
+        time: '上午',
+        list: dataList.value[2],
+      },
+      {
+        week: '星期三',
+        time: '下午',
+        list: dataList.value[2],
+      },
+      {
+        week: '星期四',
+        time: '上午',
+        list: dataList.value[3],
+      },
+      {
+        week: '星期四',
+        time: '下午',
+        list: dataList.value[3],
+      },
+      {
+        week: '星期五',
+        time: '上午',
+        list: dataList.value[4],
+      },
+      {
+        week: '星期五',
+        time: '下午',
+        list: dataList.value[4],
+      },
+      {
+        week: '星期六',
+        time: '上午',
+        list: dataList.value[5],
+      },
+      {
+        week: '星期六',
+        time: '下午',
+        list: dataList.value[5],
+      },
+      {
+        week: '星期日',
+        time: '上午',
+        list: dataList.value[6],
+      },
+      {
+        week: '星期日',
+        time: '下午',
+        list: dataList.value[6],
+      },
+    ]
+    timeList.forEach((item, index) => {
+      if (week.value != dayjs().week()) {
+        reset(data, item, index + 1, false)
+      } else {
+        reset(data, item, index + 1, true)
+      }
+    })
   })
 }
 render()
+
+// 重置数据
+const reset = (data, item, index, isThisWeek) => {
+  const temp = {
+    date: dayjs().startOf('week').add(index, 'day').format('YYYY-MM-DD'),
+    year: dayjs().year(),
+    week: item.week,
+    time: item.time,
+    day: week.value,
+    type: '',
+    content: '',
+    member: '',
+    flag: '-5723903220527053290',
+    selectShow: false,
+    valueShow: false,
+    personShow: false,
+  }
+  const arr = data.filter((i) => i.week === item.week && i.time === item.time)
+  if (!isThisWeek) {
+    item.list.push(temp)
+  } else if (arr.length === 0) {
+    item.list.push(temp)
+  } else {
+    item.list = item.list.push(...arr)
+    console.log(item.list)
+  }
+  console.log(dataList.value[0])
+}
 </script>
 
 <style lang="less" scoped>
@@ -273,7 +369,6 @@ render()
   min-height: 100vh;
   background-image: url('@/assets/img/背景图.png');
   background-size: cover;
-  font-family: 'PingFang SC-Bold';
   padding: 36px 17px 42px 17px;
 }
 

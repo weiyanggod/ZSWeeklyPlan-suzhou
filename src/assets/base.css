@@ -11,6 +11,12 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: '宋体';
+  src: url('./font/宋体.otf');
+  font-weight: normal;
+  font-style: normal;
+}
 *,
 *::before,
 *::after {
