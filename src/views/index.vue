@@ -86,6 +86,7 @@
           style="margin-top: 6px"
           :rows="2"
           type="textarea"
+          @blur="submitForm(i)"
         />
       </div>
     </div>
@@ -377,7 +378,6 @@ const reset = (data, item) => {
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
   if (arr.length === 0) {
     item.list.push(temp)
-    submitForm(temp, true)
   } else {
     item.list = item.list.push(...arr)
   }
