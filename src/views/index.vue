@@ -34,7 +34,7 @@
         <th style="width: 160px">星期</th>
         <th colspan="3" style="width: 720px">工作安排</th>
         <th style="width: 250px">参会人员</th>
-        <th style="width: 80px; height: 70px">操作</th>
+        <th style="width: 80px; height: 50px">操作</th>
       </tr>
       <template
         v-for="it in [
@@ -54,14 +54,13 @@
           <td>{{ item.week }}</td>
           <td>{{ item.time }}</td>
           <td
-            class="w150h70"
+            class="w150h50"
             style="padding: 0 10px"
             @dblclick="item.selectShow = true"
           >
             <el-select
-              v-if="item.selectShow"
               v-model="item.type"
-              placeholder="请输入"
+              placeholder="请选择"
               clearable
               @change="submitForm(item)"
             >
@@ -72,7 +71,6 @@
                 :value="ite.value"
               />
             </el-select>
-            <div v-else>{{ item.type }}</div>
           </td>
           <td
             style="width: 420px"
@@ -99,9 +97,12 @@
             <div v-else>{{ item.member }}</div>
           </td>
           <td class="buttons">
-            <el-button @click="addRow(it, item, index)">新增</el-button>
+            <el-button size="small" @click="addRow(it, item, index)">
+              新增
+            </el-button>
             <el-button
               v-if="showDel(it, item)"
+              size="small"
               type="danger"
               @click="delRow(item)"
             >
@@ -184,12 +185,18 @@ const addRow = (list, item, index) => {
     type: '',
     content: '',
     member: '',
+    iindex: index + 1,
     flag: '-5723903220527053290',
     selectShow: false,
     valueShow: false,
     personShow: false,
   }
-  submitForm(temp)
+  list.splice(index + 1, 0, temp)
+
+  list.forEach((i, index) => {
+    i.iindex = index
+    submitForm(i, true)
+  })
 }
 
 // 删除行
@@ -213,7 +220,7 @@ const showDel = (list, item) => {
 }
 
 // 保存
-const submitForm = _.debounce((item, isNotShow) => {
+const submitForm = (item, isNotShow) => {
   let isPass = true
   if (item.type && !item.content) {
     ElMessage({
@@ -266,7 +273,7 @@ const submitForm = _.debounce((item, isNotShow) => {
       render()
     })
   }
-}, 500)
+}
 
 // 获取安排方式
 getTypeApi().then(({ data }) => {
@@ -372,35 +379,35 @@ const render = () => {
     Saturday.value = []
     Sunday.value = []
 
-    timeList.forEach((item) => {
-      reset(data, item)
+    timeList.forEach((item, index) => {
+      reset(data, item, index)
     })
   })
 }
 
 // 重置数据
-const reset = (data, item) => {
-  let index = 1
+const reset = (data, item, index) => {
+  let add = 1
   if (item.week === '星期二') {
-    index = 2
+    add = 2
   }
   if (item.week === '星期三') {
-    index = 3
+    add = 3
   }
   if (item.week === '星期四') {
-    index = 4
+    add = 4
   }
   if (item.week === '星期五') {
-    index = 5
+    add = 5
   }
   if (item.week === '星期六') {
-    index = 6
+    add = 6
   }
   if (item.week === '星期日') {
-    index = 7
+    add = 7
   }
   const temp = {
-    date: dayjs().startOf('week').add(index, 'day').format('YYYY-MM-DD'),
+    date: dayjs().startOf('week').add(add, 'day').format('YYYY-MM-DD'),
     year: dayjs().year(),
     week: item.week,
     time: item.time,
@@ -408,6 +415,7 @@ const reset = (data, item) => {
     type: '',
     content: '',
     member: '',
+    iindex: index,
     flag: '-5723903220527053290',
     selectShow: false,
     valueShow: false,
@@ -449,6 +457,7 @@ render()
   text-align: left;
   font-style: normal;
   text-transform: none;
+  font-family: 'AlibabaPuHuiTi Bold';
 }
 table {
   margin-top: 40px;
@@ -459,7 +468,7 @@ th {
   background-color: #6a8dc9;
 }
 td {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
   color: #3d3d3d;
   background-color: rgba(249, 251, 255, 0.8);
@@ -476,9 +485,9 @@ table tr td {
   text-align: left;
   width: 250px;
 }
-.w150h70 {
+.w150h50 {
   width: 150px;
-  height: 70px;
+  height: 45px;
 }
 
 :deep(.el-button) {
