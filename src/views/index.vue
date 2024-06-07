@@ -363,7 +363,7 @@ const render = () => {
     Saturday.value = []
     Sunday.value = []
     timeList.forEach((item) => {
-      if (week.value && week.value != dayjs().week) {
+      if (week.value != dayjs().week) {
         reset(data, item, false)
       } else {
         reset(data, item, true)
