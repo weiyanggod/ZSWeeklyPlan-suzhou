@@ -52,7 +52,7 @@
                 :value="item.value"
               />
             </el-select>
-            <el-button :icon="Plus" @click="addRow(i, index, inx)" />
+            <el-button :icon="Plus" @click="addRow(item, i, inx)" />
           </div>
         </div>
         <div
@@ -114,22 +114,13 @@ const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
   const is = years.value.find((i) => i == dayjs().year())
-  if (is) {
-    year.value = years.value[years.value.length - 1]
-  } else {
-    year.value = dayjs().year()
-  }
+  year.value = year.value = dayjs().year()
 })
 const weeks = ref([])
 const week = ref(null)
 getWeekApi().then(({ data }) => {
   weeks.value = data
-  const is = weeks.value.find((i) => i == dayjs().year())
-  if (is) {
-    week.value = weeks.value[years.value.length - 1]
-  } else {
-    week.value = dayjs().year()
-  }
+  week.value = dayjs().week()
 })
 
 const options = ref([])
@@ -162,7 +153,7 @@ const changeWeek = (data) => {
 const dataList = ref([[], [], [], [], [], [], []])
 
 // 新增行
-const addRow = (item) => {
+const addRow = (list, item, inx) => {
   const temp = {
     date: item.date,
     year: item.year,
@@ -177,8 +168,11 @@ const addRow = (item) => {
     valueShow: false,
     personShow: false,
   }
-
-  submitForm(temp)
+  list.splice(inx + 1, 0, temp)
+  list.forEach((i, index) => {
+    i.iindex = index
+    submitForm(i, true)
+  })
 }
 
 // 删除行
@@ -201,7 +195,7 @@ const showDel = (list, item) => {
 }
 
 // 保存
-const submitForm = _.debounce((item, isNotShow) => {
+const submitForm = (item, isNotShow) => {
   let isPass = true
   if (item.type && !item.content) {
     ElMessage({
@@ -253,7 +247,7 @@ const submitForm = _.debounce((item, isNotShow) => {
       render()
     })
   }
-}, 500)
+}
 
 const render = () => {
   getPlanDataApi({
@@ -341,6 +335,11 @@ const render = () => {
     timeList.forEach((item) => {
       reset(data, item)
     })
+    dataList.value.forEach((item) => {
+      item.forEach((i, index) => {
+        i.iindex = index
+      })
+    })
   })
 }
 render()
@@ -400,7 +399,7 @@ const reset = (data, item) => {
 
 .title,
 .example-showcase .el-dropdown-link {
-  font-family: 'AlibabaPuHuiTi';
+  font-family: 'AlibabaPuHuiTi Bold';
   font-weight: 700;
   font-size: 24px;
   color: #2e60b5;
@@ -408,7 +407,6 @@ const reset = (data, item) => {
   text-transform: none;
   text-align: center;
   line-height: 36px;
-  text-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .car {
