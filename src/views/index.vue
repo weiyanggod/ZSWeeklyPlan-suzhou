@@ -378,7 +378,6 @@ const render = () => {
     timeList.forEach((item) => {
       reset(data, item)
     })
-    getWeeks()
   })
 }
 
