@@ -203,7 +203,6 @@ const delRow = (item) => {
 
 // 判断当前行是否有删除按钮
 const showDel = (list, item) => {
-  // console.log(list)
   const arr = list.filter((i) => i.time === item.time)
   if (arr.length > 1) {
     return true
