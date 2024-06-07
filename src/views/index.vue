@@ -43,7 +43,7 @@
               v-model="i.type"
               placeholder="请选择"
               style="width: 120px"
-              @change="submitForm(i)"
+              @blur="submitForm(i)"
             >
               <el-option
                 v-for="item in options"
@@ -78,7 +78,7 @@
           :rows="2"
           type="textarea"
           :autosize="{ minRows: 5 }"
-          @change="submitForm(i)"
+          @blur="submitForm(i)"
         />
         <div style="margin-top: 10px">参会人员</div>
         <el-input
