@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div v-loading="loading" class="page">
     <div class="title">
       <el-dropdown :teleported="false" trigger="click" @command="changeYear">
         <span class="el-dropdown-link">
@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import { ElMessage } from 'element-plus'
@@ -129,6 +129,7 @@ import {
   deletePlanApi,
 } from '@/api/index'
 
+const loading = ref(true)
 const years = ref([])
 const year = ref(null)
 getYearApi().then(({ data }) => {
@@ -166,6 +167,7 @@ const Thursday = ref([])
 const Friday = ref([])
 const Saturday = ref([])
 const Sunday = ref([])
+
 // 新增行
 const addRow = (list, item, index) => {
   const temp = {
@@ -367,6 +369,7 @@ const render = () => {
     timeList.forEach((item, index) => {
       reset(data, item, index)
     })
+    loading.value = false
   })
 }
 
@@ -415,6 +418,28 @@ const reset = (data, item, index) => {
   }
 }
 render()
+
+// 空白点击监听
+document.addEventListener('click', (data) => {
+  if (data.target.className === 'page') {
+    const list = [
+      Monday.value,
+      Tuesday.value,
+      Wednesday.value,
+      Thursday.value,
+      Friday.value,
+      Saturday.value,
+      Sunday.value,
+    ]
+    list.forEach((item) => {
+      item.forEach((i) => {
+        i.selectShow = false
+        i.valueShow = false
+        i.personShow = false
+      })
+    })
+  }
+})
 </script>
 
 <style lang="less" scoped>
@@ -498,3 +523,4 @@ table tr td {
   align-items: center;
 }
 </style>
+import type { nextTick } from 'process'

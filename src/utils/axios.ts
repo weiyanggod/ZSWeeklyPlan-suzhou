@@ -13,7 +13,6 @@ interface ResultData<T = any> extends Result {
   data?: T
 }
 const URL: string = import.meta.env.VITE_API_BASE_URL
-console.log(URL)
 
 enum RequestEnums {
   TIMEOUT = 10000,
