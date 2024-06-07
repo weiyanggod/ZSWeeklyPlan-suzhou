@@ -191,7 +191,7 @@ const showDel = (list, item) => {
 }
 
 // 保存
-const submitForm = _.debounce((item) => {
+const submitForm = _.debounce((item, isNotShow) => {
   let isPass = true
   if (item.type && !item.content) {
     ElMessage({
@@ -226,15 +226,19 @@ const submitForm = _.debounce((item) => {
     delete data.personShow
     updatePlanApi(data).then(() => {
       if (data.id) {
-        ElMessage({
-          message: '修改成功',
-          type: 'success',
-        })
+        if (!isNotShow) {
+          ElMessage({
+            message: '修改成功',
+            type: 'success',
+          })
+        }
       } else {
-        ElMessage({
-          message: '新增成功',
-          type: 'success',
-        })
+        if (!isNotShow) {
+          ElMessage({
+            message: '新增成功',
+            type: 'success',
+          })
+        }
       }
       render()
     })
@@ -325,18 +329,14 @@ const render = () => {
       },
     ]
     timeList.forEach((item, index) => {
-      if (week.value != dayjs().week()) {
-        reset(data, item, index + 1, false)
-      } else {
-        reset(data, item, index + 1, true)
-      }
+      reset(data, item, index + 1)
     })
   })
 }
 render()
 
 // 重置数据
-const reset = (data, item, index, isThisWeek) => {
+const reset = (data, item, index) => {
   const temp = {
     date: dayjs().startOf('week').add(index, 'day').format('YYYY-MM-DD'),
     year: dayjs().year(),
@@ -352,10 +352,9 @@ const reset = (data, item, index, isThisWeek) => {
     personShow: false,
   }
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
-  if (!isThisWeek) {
+  if (arr.length === 0) {
     item.list.push(temp)
-  } else if (arr.length === 0) {
-    item.list.push(temp)
+    submitForm(temp, true)
   } else {
     item.list = item.list.push(...arr)
   }
