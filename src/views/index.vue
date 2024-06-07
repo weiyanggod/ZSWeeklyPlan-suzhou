@@ -132,13 +132,13 @@ const years = ref([])
 const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
-  year.value = years.value[years.value.length - 1]
+  year.value = years.value[years.value.length - 1] || dayjs().year()
 })
 const weeks = ref([])
 const week = ref(null)
 getWeekApi().then(({ data }) => {
   weeks.value = data
-  week.value = weeks.value[weeks.value.length - 1]
+  week.value = weeks.value[weeks.value.length - 1] || dayjs().week()
 })
 
 // 更改周数
@@ -363,13 +363,17 @@ const render = () => {
     Saturday.value = []
     Sunday.value = []
     timeList.forEach((item) => {
-      reset(data, item)
+      if (week.value && week.value != dayjs().week) {
+        reset(data, item, false)
+      } else {
+        reset(data, item, true)
+      }
     })
   })
 }
 
 // 重置数据
-const reset = (data, item) => {
+const reset = (data, item, isThisWeek) => {
   let index = 1
   if (item.week === '星期二') {
     index = 2
@@ -394,6 +398,7 @@ const reset = (data, item) => {
     year: dayjs().year(),
     week: item.week,
     time: item.time,
+    day: week.value,
     type: '',
     content: '',
     member: '',
@@ -404,11 +409,14 @@ const reset = (data, item) => {
   }
 
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
+  console.log(isThisWeek)
 
-  if (arr.length === 0) {
+  if (!isThisWeek) {
+    item.list.value.push(temp)
+  } else if (arr.length === 0) {
     item.list.value.push(temp)
   } else {
-    item.list.value = item.list.value.concat(arr)
+    item.list.value = item.list.value.push(...arr)
   }
 }
 render()
