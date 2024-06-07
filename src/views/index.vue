@@ -36,7 +36,17 @@
         <th style="width: 250px">参会人员</th>
         <th style="width: 80px; height: 70px">操作</th>
       </tr>
-      <template v-for="it in [data, data2, data3, data4, data5]">
+      <template
+        v-for="it in [
+          Monday,
+          Tuesday,
+          Wednesday,
+          Thursday,
+          Friday,
+          Saturday,
+          Sunday,
+        ]"
+      >
         <tr v-for="(item, index) in it" :key="index">
           <td v-if="index === 0" :rowspan="it.length" style="color: #3d3d3d">
             {{ dayjs(item.date).format('YYYY-MM-DD') }}
@@ -89,7 +99,12 @@
             <div v-else>{{ item.member }}</div>
           </td>
           <td class="buttons">
-            <el-button @click="addRow(it, item, index)">新增</el-button>
+            <el-button
+              v-if="item.time !== it[index + 1]?.time"
+              @click="addRow(it, item, index)"
+            >
+              新增
+            </el-button>
             <el-button
               v-if="showDel(it, item)"
               type="danger"
@@ -128,7 +143,6 @@ const weeks = ref([])
 const week = ref(null)
 getWeekApi().then(({ data }) => {
   weeks.value = data
-
   week.value = weeks.value[weeks.value.length - 1]
 })
 
@@ -145,14 +159,16 @@ const changeWeek = (data) => {
 }
 
 let options = ref([])
-const data = ref([])
-const data2 = ref([])
-const data3 = ref([])
-const data4 = ref([])
-const data5 = ref([])
+const Monday = ref([])
+const Tuesday = ref([])
+const Wednesday = ref([])
+const Thursday = ref([])
+const Friday = ref([])
+const Saturday = ref([])
+const Sunday = ref([])
 // 新增行
 const addRow = (list, item, index) => {
-  list.splice(index + 1, 0, {
+  const temp = {
     date: item.date,
     year: item.year,
     week: item.week,
@@ -165,8 +181,8 @@ const addRow = (list, item, index) => {
     selectShow: false,
     valueShow: false,
     personShow: false,
-  })
-  submitForm(list[index + 1])
+  }
+  submitForm(temp)
 }
 
 // 删除行
@@ -265,33 +281,139 @@ const render = () => {
   getPlanDataApi({
     year: year.value,
     week: week.value,
-  }).then(({ data: list }) => {
-    data.value = []
-    data2.value = []
-    data3.value = []
-    data4.value = []
-    data5.value = []
-    list.forEach((item) => {
+  }).then(({ data }) => {
+    data.forEach((item) => {
       item.selectShow = false
       item.valueShow = false
       item.personShow = false
-      if (item.week === '星期一') {
-        data.value.push(item)
-      }
-      if (item.week === '星期二') {
-        data2.value.push(item)
-      }
-      if (item.week === '星期三') {
-        data3.value.push(item)
-      }
-      if (item.week === '星期四') {
-        data4.value.push(item)
-      }
-      if (item.week === '星期五') {
-        data5.value.push(item)
-      }
+
+      // if (item.week === '星期二') {
+      //   data2.value.push(item)
+      // }
+      // if (item.week === '星期三') {
+      //   data3.value.push(item)
+      // }
+      // if (item.week === '星期四') {
+      //   data4.value.push(item)
+      // }
+      // if (item.week === '星期五') {
+      //   data5.value.push(item)
+      // }
+      // if (item.week === '星期六') {
+      //   data6.value.push(item)
+      // }
+      // if (item.week === '星期日') {
+      //   data7.value.push(item)
+      // }
+    })
+
+    const timeList = [
+      {
+        week: '星期一',
+        time: '上午',
+        list: Monday,
+      },
+      {
+        week: '星期一',
+        time: '下午',
+        list: Monday,
+      },
+      {
+        week: '星期二',
+        time: '上午',
+        list: Tuesday,
+      },
+      {
+        week: '星期二',
+        time: '下午',
+        list: Tuesday,
+      },
+      {
+        week: '星期三',
+        time: '上午',
+        list: Wednesday,
+      },
+      {
+        week: '星期三',
+        time: '下午',
+        list: Wednesday,
+      },
+      {
+        week: '星期四',
+        time: '上午',
+        list: Thursday,
+      },
+      {
+        week: '星期四',
+        time: '下午',
+        list: Thursday,
+      },
+      {
+        week: '星期五',
+        time: '上午',
+        list: Friday,
+      },
+      {
+        week: '星期五',
+        time: '下午',
+        list: Friday,
+      },
+      {
+        week: '星期六',
+        time: '上午',
+        list: Saturday,
+      },
+      {
+        week: '星期六',
+        time: '下午',
+        list: Saturday,
+      },
+      {
+        week: '星期日',
+        time: '上午',
+        list: Sunday,
+      },
+      {
+        week: '星期日',
+        time: '下午',
+        list: Sunday,
+      },
+    ]
+    Monday.value = []
+    Tuesday.value = []
+    Wednesday.value = []
+    Thursday.value = []
+    Friday.value = []
+    Saturday.value = []
+    Sunday.value = []
+    timeList.forEach((item, index) => {
+      reset(data, item, index + 1)
     })
   })
+}
+
+// 重置数据
+const reset = (data, item, index) => {
+  const temp = {
+    date: dayjs().startOf('week').add(index, 'day').format('YYYY-MM-DD'),
+    year: dayjs().year(),
+    week: item.week,
+    time: item.time,
+    type: '',
+    content: '',
+    member: '',
+    flag: '-5723903220527053290',
+    selectShow: false,
+    valueShow: false,
+    personShow: false,
+  }
+  const arr = data.filter((i) => i.week === item.week && i.time === item.time)
+
+  if (arr.length === 0) {
+    item.list.value.push(temp)
+  } else {
+    item.list.value = item.list.value.concat(arr)
+  }
 }
 render()
 </script>
