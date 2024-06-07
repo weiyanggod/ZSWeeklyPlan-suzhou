@@ -211,8 +211,6 @@ const showDel = (list, item) => {
 
 // 保存
 const submitForm = (item, isNotShow) => {
-  console.log(item)
-
   let isPass = false
   if (!item.content) {
     ElMessage({
@@ -412,7 +410,6 @@ const reset = (data, item, index) => {
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
   if (arr.length === 0) {
     item.list.value.push(temp)
-    submitForm(temp, true)
   } else {
     item.list.value.push(...arr)
   }
