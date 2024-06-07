@@ -362,8 +362,9 @@ const render = () => {
     Friday.value = []
     Saturday.value = []
     Sunday.value = []
+
     timeList.forEach((item) => {
-      if (week.value != dayjs().week) {
+      if (week.value != dayjs().week()) {
         reset(data, item, false)
       } else {
         reset(data, item, true)
@@ -409,14 +410,12 @@ const reset = (data, item, isThisWeek) => {
   }
 
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
-  console.log(isThisWeek)
-
   if (!isThisWeek) {
     item.list.value.push(temp)
   } else if (arr.length === 0) {
     item.list.value.push(temp)
   } else {
-    item.list.value = item.list.value.push(...arr)
+    item.list.value.push(...arr)
   }
 }
 render()
