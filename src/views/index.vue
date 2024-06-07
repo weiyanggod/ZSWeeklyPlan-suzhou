@@ -62,7 +62,7 @@
               v-model="item.type"
               placeholder="请选择"
               clearable
-              @change="submitForm(item)"
+              @blur="submitForm(item)"
             >
               <el-option
                 v-for="ite in options"
@@ -82,7 +82,7 @@
               v-model="item.content"
               placeholder="请输入"
               type="textarea"
-              @change="submitForm(item)"
+              @blur="submitForm(item)"
             />
             <div v-else>{{ item.content }}</div>
           </td>
@@ -92,7 +92,7 @@
               v-model="item.member"
               placeholder="请输入"
               type="textarea"
-              @change="submitForm(item)"
+              @blur="submitForm(item)"
             />
             <div v-else>{{ item.member }}</div>
           </td>
