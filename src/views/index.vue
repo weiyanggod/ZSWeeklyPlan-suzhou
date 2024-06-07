@@ -99,12 +99,7 @@
             <div v-else>{{ item.member }}</div>
           </td>
           <td class="buttons">
-            <el-button
-              v-if="item.time !== it[index + 1]?.time"
-              @click="addRow(it, item, index)"
-            >
-              新增
-            </el-button>
+            <el-button @click="addRow(it, item, index)">新增</el-button>
             <el-button
               v-if="showDel(it, item)"
               type="danger"
@@ -286,25 +281,6 @@ const render = () => {
       item.selectShow = false
       item.valueShow = false
       item.personShow = false
-
-      // if (item.week === '星期二') {
-      //   data2.value.push(item)
-      // }
-      // if (item.week === '星期三') {
-      //   data3.value.push(item)
-      // }
-      // if (item.week === '星期四') {
-      //   data4.value.push(item)
-      // }
-      // if (item.week === '星期五') {
-      //   data5.value.push(item)
-      // }
-      // if (item.week === '星期六') {
-      //   data6.value.push(item)
-      // }
-      // if (item.week === '星期日') {
-      //   data7.value.push(item)
-      // }
     })
 
     const timeList = [
@@ -386,14 +362,33 @@ const render = () => {
     Friday.value = []
     Saturday.value = []
     Sunday.value = []
-    timeList.forEach((item, index) => {
-      reset(data, item, index + 1)
+    timeList.forEach((item) => {
+      reset(data, item)
     })
   })
 }
 
 // 重置数据
-const reset = (data, item, index) => {
+const reset = (data, item) => {
+  let index = 1
+  if (item.week === '星期二') {
+    index = 2
+  }
+  if (item.week === '星期三') {
+    index = 3
+  }
+  if (item.week === '星期四') {
+    index = 4
+  }
+  if (item.week === '星期五') {
+    index = 5
+  }
+  if (item.week === '星期六') {
+    index = 6
+  }
+  if (item.week === '星期日') {
+    index = 7
+  }
   const temp = {
     date: dayjs().startOf('week').add(index, 'day').format('YYYY-MM-DD'),
     year: dayjs().year(),
@@ -407,6 +402,7 @@ const reset = (data, item, index) => {
     valueShow: false,
     personShow: false,
   }
+
   const arr = data.filter((i) => i.week === item.week && i.time === item.time)
 
   if (arr.length === 0) {
