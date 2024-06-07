@@ -113,13 +113,23 @@ const years = ref([])
 const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
-  year.value = years.value[years.value.length - 1] || dayjs().year()
+  const is = years.value.find((i) => i == dayjs().year())
+  if (is) {
+    year.value = years.value[years.value.length - 1]
+  } else {
+    year.value = dayjs().year()
+  }
 })
 const weeks = ref([])
 const week = ref(null)
 getWeekApi().then(({ data }) => {
   weeks.value = data
-  week.value = weeks.value[weeks.value.length - 1] || dayjs().week()
+  const is = weeks.value.find((i) => i == dayjs().year())
+  if (is) {
+    week.value = weeks.value[years.value.length - 1]
+  } else {
+    week.value = dayjs().year()
+  }
 })
 
 const options = ref([])
