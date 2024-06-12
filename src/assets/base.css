@@ -12,6 +12,13 @@
   font-weight: normal;
   font-style: normal;
 }
+/*公共字体的样式 */
+@font-face {
+  font-family: 'FZCHSJW--GB1-0';
+  src: url('./font/fzchsjwgb10_downyi.com.TTF');
+  font-weight: normal;
+  font-style: normal;
+}
 *,
 *::before,
 *::after {

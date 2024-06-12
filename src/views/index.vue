@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import { ElMessage } from 'element-plus'
@@ -462,11 +462,11 @@ document.addEventListener('click', (data) => {
   font-size: 48px;
   color: #2e60b5;
   line-height: 67px;
-  text-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.3);
   text-align: left;
   font-style: normal;
   text-transform: none;
-  font-family: 'AlibabaPuHuiTi Bold';
+  font-family: 'FZCHSJW--GB1-0';
 }
 table {
   margin-top: 40px;
@@ -523,4 +523,4 @@ table tr td {
   align-items: center;
 }
 </style>
-import type { nextTick } from 'process'
+import type { log } from 'console'
