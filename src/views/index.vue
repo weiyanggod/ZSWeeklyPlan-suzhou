@@ -104,7 +104,7 @@
               v-if="showDel(it, item)"
               size="small"
               type="danger"
-              @click="delRow(item)"
+              @click="delRow(item, index, it)"
             >
               删除
             </el-button>
@@ -134,7 +134,6 @@ const years = ref([])
 const year = ref(null)
 getYearApi().then(({ data }) => {
   years.value = data
-  const is = years.value.find((i) => i == dayjs().year())
   year.value = dayjs().year()
 })
 const weeks = ref([])
@@ -142,7 +141,6 @@ const week = ref(null)
 const getWeeks = () => {
   getWeekApi().then(({ data }) => {
     weeks.value = data
-    const is = weeks.value.find((i) => i == dayjs().year())
     week.value = dayjs().week()
   })
 }
@@ -193,14 +191,16 @@ const addRow = (list, item, index) => {
 }
 
 // 删除行
-const delRow = (item) => {
-  deletePlanApi(item.id).then(() => {
-    ElMessage({
-      message: '删除成功',
-      type: 'success',
+const delRow = (item, index, list) => {
+  list.splice(index, 1)
+  if (item.id) {
+    deletePlanApi(item.id).then(() => {
+      ElMessage({
+        message: '删除成功',
+        type: 'success',
+      })
     })
-    render()
-  })
+  }
 }
 
 // 判断当前行是否有删除按钮
