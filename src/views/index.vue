@@ -396,7 +396,7 @@ const reset = (data, item) => {
 
 .title,
 .example-showcase .el-dropdown-link {
-  font-family: 'AlibabaPuHuiTi Bold';
+  font-family: 'FZCHSJW--GB1-0';
   font-weight: 700;
   font-size: 24px;
   color: #2e60b5;
