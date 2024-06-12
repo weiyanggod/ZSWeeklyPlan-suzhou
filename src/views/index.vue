@@ -67,7 +67,7 @@
             v-if="showDel(item, i)"
             type="danger"
             link
-            @click="delRow(i)"
+            @click="delRow(i, inx, item)"
           >
             删除
           </el-button>
@@ -176,14 +176,16 @@ const addRow = (list, item, inx) => {
 }
 
 // 删除行
-const delRow = (item) => {
-  deletePlanApi(item.id).then(() => {
-    ElMessage({
-      message: '删除成功',
-      type: 'success',
+const delRow = (item, index, list) => {
+  list.splice(index, 1)
+  if (item.id) {
+    deletePlanApi(item.id).then(() => {
+      ElMessage({
+        message: '删除成功',
+        type: 'success',
+      })
     })
-    render()
-  })
+  }
 }
 
 // 判断当前行是否有删除按钮
