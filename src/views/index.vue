@@ -459,17 +459,15 @@ document.addEventListener('click', (data) => {
 .title,
 .example-showcase .el-dropdown-link {
   font-weight: 700;
-  font-size: 48px;
+  font-size: 35px;
   color: #2e60b5;
   line-height: 67px;
-  text-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.3);
   text-align: left;
   font-style: normal;
   text-transform: none;
   font-family: 'FZCHSJW--GB1-0';
 }
 table {
-  margin-top: 40px;
   border-collapse: collapse;
 }
 th {
