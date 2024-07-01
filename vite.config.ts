@@ -6,7 +6,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import VueDevTools from 'vite-plugin-vue-devtools'
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'weekPlan/PC/',
+  base: './',
   server: {
     host: '0.0.0.0',
     proxy: {
