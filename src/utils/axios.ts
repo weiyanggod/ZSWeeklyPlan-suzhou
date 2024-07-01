@@ -23,7 +23,7 @@ enum RequestEnums {
 
 const config = {
   // 默认地址
-  baseURL: '/plan',
+  baseURL: '/plan/suzhou',
   // 设置超时时间
   timeout: RequestEnums.TIMEOUT as number,
   // 跨域时候允许携带凭证
