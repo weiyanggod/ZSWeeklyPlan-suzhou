@@ -1,5 +1,5 @@
 /*公共字体的样式 */
-@font-face {
+/* @font-face {
   font-family: 'AlibabaPuHuiTi';
   src: url('./font/AlibabaPuHuiTi-2-55-Regular.otf');
   font-weight: normal;
@@ -17,7 +17,7 @@
   src: url('./font/fzchsjwgb10_downyi.com.TTF');
   font-weight: normal;
   font-style: normal;
-}
+} */
 *,
 *::before,
 *::after {
