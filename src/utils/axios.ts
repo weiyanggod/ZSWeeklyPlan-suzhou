@@ -26,6 +26,10 @@ const config = {
   baseURL: (URL as string) || '/plan/suzhou',
   // 设置超时时间
   timeout: RequestEnums.TIMEOUT as number,
+  headers: {
+    token:
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZWV5b24iLCJpYXQiOjE3NDM0NzU3ODAsImtleSI6ImZlbmNlIn0.--V6oW9ec1cx9oBEEPWQMkOI0ZhXYrjsHm-S_GpsorE',
+  },
   // 跨域时候允许携带凭证
   withCredentials: true,
 }
